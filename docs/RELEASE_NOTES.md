@@ -2,6 +2,8 @@
 
 > [!IMPORTANT]
 > **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+>
+> **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
 
 Adds built-in startup support for HUD Ballistic Trajectory Overlay v2, released September 11, 2026. Install the original overlay separately and give Bingus Shared Loader the winning priority over it. Arsenal's shared-file warning remains expected; no extra compatibility package is required.
 

@@ -59,7 +59,7 @@ def main():
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
         'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v3',
-        'description': 'Required by Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed. Install this ZIP through Arsenal or HD2MM, enable it alongside your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2; give this loader priority over the overlay.',
+        'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed. Import this ZIP through Arsenal or HD2MM, enable it alongside your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
         'provides': {'shared_loader_api': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},

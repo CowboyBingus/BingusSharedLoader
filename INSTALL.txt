@@ -6,6 +6,11 @@ Reinforcement Beacons Fixed releases. Install with Arsenal or HD2MM: import
 BingusSharedLoader.zip, enable it alongside your chosen mods, then click Deploy.
 One loader installation supports all your selected mods.
 
+ARSENAL LOAD ORDER
+Place Bingus Shared Loader LAST, at the bottom of the list, using Arsenal's
+default priority setting. If you enabled first-mod priority, place it first
+instead. Purge and Deploy after reordering.
+
 Formerly named Shared Mod Loader.
 Supported: Steam build 24826606 / EXE 1.8.45317.0.
 

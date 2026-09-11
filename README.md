@@ -4,6 +4,8 @@
 
 > [!IMPORTANT]
 > **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+>
+> **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
 
 [Download loader-v3](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v3)
 
