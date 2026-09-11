@@ -2,6 +2,9 @@
 
 # Bingus Shared Loader
 
+> [!IMPORTANT]
+> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Download `BingusSharedLoader.zip` separately and enable it alongside your chosen mods in Arsenal or HD2MM. **Those mods will not activate without this loader.** Managers do not install it automatically. Install the loader once, even when using several supported mods.
+
 [Download loader-v3](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v3)
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.

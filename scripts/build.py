@@ -59,7 +59,7 @@ def main():
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
         'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v3',
-        'description': 'Starts your installed CowboyBingus mods and HUD Ballistic Trajectory Overlay v2. Give this loader priority over the overlay.',
+        'description': 'REQUIRED DEPENDENCY for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed. Download separately and enable alongside your chosen mods. Also supports HUD Ballistic Trajectory Overlay v2; give this loader priority over the overlay.',
         'provides': {'shared_loader_api': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},
