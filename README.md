@@ -2,26 +2,35 @@
 
 # Bingus Shared Loader
 
-[Download loader-v2](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v2)
+[Download loader-v3](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v3)
 
-Starts your installed CowboyBingus mods through one shared startup resource. The loader has no gameplay effect by itself.
+Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
 **Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Managers do not install this dependency automatically. Keep the loader enabled while any dependent mod is enabled.
 
-This is **loader-v2 / API 1**, renamed from Shared Mod Loader. Replace the previous entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install both names together. See [installation](INSTALL.txt).
+This is **loader-v3 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt).
 
 ## Supported modules
 
 - Better Stratagem Bounce.
 - Hellpod Steering Unlocked.
 - Reinforcement Beacons Fixed, formerly Reinforcement Beacon Fix.
+- HUD Ballistic Trajectory Overlay **v2**, released September 11, 2026.
 - The reserved Wide Angle Stratagems module, if separately installed.
 
 Each gameplay package owns its own Lua resource and is optional. A missing or failed module does not prevent later modules from loading. A registered name does not mean a release exists or establish that module's gameplay compatibility.
 
-The loader owns `core/wwise/lua/wwise_flow_callbacks`, preserves the original audio callbacks and leaves `boot` unchanged. The tested HUD+ boot script can coexist. Another Wwise resource replacement can still conflict; this loader does not merge arbitrary script mods.
+The loader owns `core/wwise/lua/wwise_flow_callbacks`, preserves the original audio callbacks and leaves `boot` unchanged. HUD+ **0.1.3** can coexist through its existing startup script; the loader does not start HUD+ a second time.
 
-Supported: Steam build **24826606** / EXE **1.8.45317.0**. Startup was observed with the current module family. Callback preservation, missing-module behavior and manager deployment are checked independently of gameplay behavior.
+## HUD Ballistic Trajectory Overlay v2
+
+Install the original overlay separately and give **Bingus Shared Loader the winning priority over the overlay** in your manager, then Purge and Deploy. Arsenal still reports their shared startup file as a conflict; this overlap is expected for the supported pair. The loader starts the installed overlay automatically. No extra compatibility mod is required, and other gameplay mods are optional.
+
+The overlay keeps its own configuration and defaults. Its optional `HUDBTO.ini` belongs beside the game's `bin` and `data` folders, as directed by the original package. The loader neither changes nor installs that file.
+
+The maintainer confirmed loader-v3 works in-game with the v2 overlay linked in [technical notes](docs/TECHNICAL.md). Offline checks also cover startup, configuration reads and callback forwarding with HUD+ and the gameplay modules. Future releases need revalidation if their startup changes. Other startup replacements can still conflict; this loader does not merge arbitrary scripts.
+
+Supported: Steam build **24826606** / EXE **1.8.45317.0**. Callback preservation, missing-module behavior and manager deployment are checked independently of each gameplay mod's behavior.
 
 The runtime log is `%LOCALAPPDATA%/BingusSharedLoader.log`.
 

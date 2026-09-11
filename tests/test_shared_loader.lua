@@ -1,6 +1,7 @@
 local source, build = assert(arg[1]), assert(arg[2])
 local names = {'mods/cowboybingus/better_stratagem_bounce', 'mods/cowboybingus/hellpod_steering_unlocked',
-               'mods/cowboybingus/wide_angle_stratagems', 'mods/cowboybingus/reinforcement_beacon_fix_data'}
+               'mods/cowboybingus/wide_angle_stratagems', 'mods/cowboybingus/reinforcement_beacon_fix_data',
+               'mods/codex/gun_calibration'}
 
 local function environment(audio)
     local env = setmetatable({print = function() end, os = {getenv = function() end},
@@ -20,8 +21,8 @@ local function execute(path, env)
 end
 
 for _, audio in ipairs({false, true}) do
-  for mask = 0, 15 do
-    for _, failure in ipairs({'none', 'lookup', 'first', 'second', 'third', 'fourth'}) do
+  for mask = 0, 31 do
+    for _, failure in ipairs({'none', 'lookup', 'first', 'second', 'third', 'fourth', 'fifth'}) do
         local env, vanilla = environment(audio), environment(audio)
         local count, updates, hud_updates = {}, 0, 0
         local function required(name)
@@ -53,7 +54,8 @@ for _, audio in ipairs({false, true}) do
                 assert(present[name], 'Missing resource reached require')
                 count[name] = (count[name] or 0) + 1
                 if failure == 'first' and name == names[1] or failure == 'second' and name == names[2]
-                    or failure == 'third' and name == names[3] or failure == 'fourth' and name == names[4] then
+                    or failure == 'third' and name == names[3] or failure == 'fourth' and name == names[4]
+                    or failure == 'fifth' and name == names[5] then
                     error('module failure')
                 end
                 local previous = env.update
@@ -63,7 +65,7 @@ for _, audio in ipairs({false, true}) do
             return required(name)
         end
         env.init()
-        assert(env.CowboyBingusModLoader.version == 3 and env.CowboyBingusModLoader.api == 1)
+        assert(env.CowboyBingusModLoader.version == 4 and env.CowboyBingusModLoader.api == 1)
         local previous = env.update
         env.update = function(...)
             hud_updates = hud_updates + 1
@@ -95,4 +97,4 @@ end
 local env = environment(false)
 execute(source .. '/shared_loader.lua', env)
 assert(env.CowboyBingusModLoader.modules[names[1]]:find('lookup failed', 1, true))
-print('PASS: shared coordinator covers all 16 mod combinations, lookup/module failure isolation, duplicate loads, update returns and original audio callbacks')
+print('PASS: shared coordinator covers all 32 mod combinations, lookup/module failure isolation, duplicate loads, update returns and original audio callbacks')

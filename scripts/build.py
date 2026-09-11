@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / 'build'
 CALLBACK_SHA = '05BBF52978028758B39F5B91A30A695D20069CEABD774D88755F0582A296BEC9'
 CALLBACK_PATH = 'core/wwise/lua/wwise_flow_callbacks'
+TESTED_CALLBACK_SHA = 'F17499FCAD89D7C549600E7354F20CDE17C6C84D907F411F1C91C6D68585C8E9'
 
 
 def run(args, **kwargs):
@@ -57,13 +58,14 @@ def main():
              for suffix in ('', '.stream', '.gpu_resources')}
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
-        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v2',
-        'description': 'Starts the current Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed modules that you have installed.',
+        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v3',
+        'description': 'Starts your installed CowboyBingus mods and HUD Ballistic Trajectory Overlay v2. Give this loader priority over the overlay.',
         'provides': {'shared_loader_api': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},
         'original_callbacks_sha256': CALLBACK_SHA, 'boot_replaced': False,
-        'gameplay_changes': False, 'runtime_verified': False, 'offline_tests': tests.strip(),
+        'gameplay_changes': False, 'runtime_verified': sha(resource) == TESTED_CALLBACK_SHA,
+        'offline_tests': tests.strip(),
     }
     report['source_sha256'] = {p.relative_to(ROOT).as_posix(): sha(p.read_bytes())
         for folder, glob in [('src', '*.lua'), ('tests', '*.lua'), ('scripts', '*.py')]
@@ -73,7 +75,8 @@ def main():
     report['release'] = {'path': release.relative_to(ROOT).as_posix(), 'sha256': sha(release.read_bytes())}
     (BUILD / 'build-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(tests.strip())
-    print('Built BingusSharedLoader.zip; gameplay testing pending.')
+    print('Built BingusSharedLoader.zip; ' + ('matches the maintainer-tested runtime.'
+        if report['runtime_verified'] else 'in-game testing pending for this runtime.'))
 
 
 if __name__ == '__main__':

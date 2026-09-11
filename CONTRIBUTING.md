@@ -24,6 +24,14 @@ python -B tests/test_shared_packages.py <Loader-ZIP> <Bounce-ZIP> <Steering-ZIP>
 
 The HUD resources must be supplied locally from the tested HUD+ package. The check runs actual bytecode in an isolated environment that rejects gameplay memory writes.
 
-`scripts/test_arsenal_packages.cjs` accepts an unpacked HDArsenal application and an isolated output directory; inspect its argument documentation before use. Application sources, user profiles, game data and test outputs are not publication inputs.
+For HUD Ballistic Trajectory Overlay v2, supply the original extracted package, the HUD+ fixtures and current gameplay ZIPs:
+
+```text
+python -B tests/test_overlay_compatibility.py <Overlay-v2-folder> <HUD-resources> <Bounce-ZIP> <Steering-ZIP> <Reinforcement-ZIP>
+```
+
+This verifies the pinned overlay archive and runs its unchanged Lua module with the compiled loader and gameplay modules. The harness substitutes the overlay's executable-path resolver and configuration file, and blocks gameplay memory APIs. It does not launch the game. Keep third-party fixtures and generated reports under ignored build directories.
+
+`scripts/test_arsenal_packages.cjs` accepts an unpacked HDArsenal application and an isolated output directory; inspect its argument documentation before use. Its optional final ZIP can be the original overlay package, including its `Overlay` option folder. Application sources, user profiles, game data and test outputs are not publication inputs.
 
 Keep the manager GUID, `CowboyBingusModLoader` API marker and existing module resource names stable. Preserve original callbacks, one-time startup, missing-module checks and failure isolation. No repository-wide license has been selected.

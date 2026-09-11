@@ -26,7 +26,7 @@ def package_release(root: Path, build: Path, report: dict) -> Path:
         'steam_build': 24826606, 'exe_version': '1.8.45317.0',
         'game_exe_sha256': report['game_exe_sha256'],
         'game_dll_sha256': report['game_dll_sha256'],
-        'runtime_verified': False,
+        'runtime_verified': report.get('runtime_verified', False),
         'files': {name: digest(data) for name, data in files.items()},
     }
     for key in ('requires', 'provides'):

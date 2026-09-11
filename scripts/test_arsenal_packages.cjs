@@ -1,6 +1,6 @@
 // Runs the installed manager backend against an isolated filesystem and profile.
 // Usage: node scripts/test_arsenal_packages.cjs <Loader-ZIP> <Arsenal-source>
-//        <new-output-directory> <Bounce-ZIP> <Steering-ZIP> [Reinforcement-ZIP]
+//        <new-output-directory> <Bounce-ZIP> <Steering-ZIP> [Reinforcement-ZIP] [Overlay-ZIP]
 // Arsenal-source must contain obfuscated_src/main and its node_modules.
 const fs = require('fs');
 const path = require('path');
@@ -83,8 +83,16 @@ async function verifyPresentation(mod, packageZip) {
 }
 (async()=>{
  const releases=[release,...process.argv.slice(5).map(p=>path.resolve(p))];
- assert(releases.length>=3 && releases.length<=4);
+ assert(releases.length>=3 && releases.length<=5);
  const packages=releases.map(p=>new AdmZip(p));
+ const archiveEntries=packages.map(pack=>{
+  const manifest=JSON5.parse(pack.readAsText('manifest.json'));
+  const includes=manifest.Options[0].Include;
+  const archives=pack.getEntries().filter(entry=>/\.patch_\d+$/.test(entry.entryName) &&
+   includes.some(folder=>entry.entryName.startsWith(folder+'/')));
+  assert.equal(archives.length,1);
+  return archives[0].entryName;
+ });
  await handler.processAndValidateZipsFromRenderer(library,releases);
  assert.equal(records.modsList.length,releases.length);
  const imported=records.modsList;
@@ -109,7 +117,7 @@ async function verifyPresentation(mod, packageZip) {
     hashes.push(digest(fs.readFileSync(path.join(data,name))));
     for(const suffix of ['.stream','.gpu_resources'])assert.equal(fs.statSync(path.join(data,name+suffix)).size,0);
    }
-   assert.deepEqual(hashes.sort(),active.map(i=>digest(packages[i].readFile('data/'+archiveName))).sort());
+   assert.deepEqual(hashes.sort(),active.map(i=>digest(packages[i].readFile(archiveEntries[i]))).sort());
    assert.equal(listFiles(path.join(game,'bin')).length,0);
    checks.push({order,mask,contiguous_slots:true,runtime_hashes_preserved:true});
   }
