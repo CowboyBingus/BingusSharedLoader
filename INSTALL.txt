@@ -1,0 +1,29 @@
+Bingus Shared Loader — loader-v2 / API 1
+
+Formerly named Shared Mod Loader.
+Supported: Steam build 24826606 / EXE 1.8.45317.0.
+
+1. Close Helldivers 2.
+2. Remove or replace the previous Shared Mod Loader / Bingus Shared Loader entry
+   in HDArsenal or HD2MM. Use only one manager.
+3. Import BingusSharedLoader.zip and your chosen current gameplay module ZIPs.
+4. Enable the loader and the gameplay mods, then Purge and Deploy.
+
+The loader is a separate required download for current module-only Better
+Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.
+It does not install gameplay mods automatically and has no gameplay effect alone.
+
+The manager GUID and internal API marker are unchanged by this rename.
+Do not deploy old and renamed copies together. Remove older gameplay packages
+that bundled their own startup loader before using current module-only packages.
+
+Check %LOCALAPPDATA%/BingusSharedLoader.log for each installed module's status.
+A module loading successfully does not prove its gameplay behavior.
+
+The loader preserves the game's Wwise callbacks and does not replace boot.
+Another package replacing the same Wwise resource can still conflict.
+
+Keep this loader enabled while any dependent gameplay mod is enabled.
+To remove it, first disable dependent mods, then disable the loader and Purge/Deploy.
+
+Developed with assistance from GPT-6 Astra.
