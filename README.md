@@ -3,13 +3,13 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Download `BingusSharedLoader.zip` separately and enable it alongside your chosen mods in Arsenal or HD2MM. **Those mods will not activate without this loader.** Managers do not install it automatically. Install the loader once, even when using several supported mods.
+> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 
 [Download loader-v3](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v3)
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
-**Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Managers do not install this dependency automatically. Keep the loader enabled while any dependent mod is enabled.
+**Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
 This is **loader-v3 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt).
 

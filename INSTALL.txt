@@ -1,10 +1,10 @@
 Bingus Shared Loader — loader-v3 / API 1
 
 REQUIRED DEPENDENCY
-Current Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement
-Beacons Fixed releases will not activate without this separately installed loader.
-Import BingusSharedLoader.zip into Arsenal or HD2MM and enable it alongside your
-chosen mods. Managers do not install it automatically. Install the loader once.
+Required by current Better Stratagem Bounce, Hellpod Steering Unlocked and
+Reinforcement Beacons Fixed releases. Install with Arsenal or HD2MM: import
+BingusSharedLoader.zip, enable it alongside your chosen mods, then click Deploy.
+One loader installation supports all your selected mods.
 
 Formerly named Shared Mod Loader.
 Supported: Steam build 24826606 / EXE 1.8.45317.0.
@@ -17,7 +17,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 
 The loader is a separate required download for current module-only Better
 Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.
-It does not install gameplay mods automatically and has no gameplay effect alone.
+It has no gameplay effect alone. Enable the gameplay mods you want to use.
 
 The manager GUID and internal API marker are unchanged.
 Do not deploy old and renamed copies together. Remove older gameplay packages
