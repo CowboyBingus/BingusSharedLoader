@@ -1,8 +1,9 @@
-Bingus Shared Loader — loader-v5 / API 1
+Bingus Shared Loader — loader-v6 / API 1
 
 REQUIRED DEPENDENCY
 Required by current Better Stratagem Bounce, Hellpod Steering Unlocked,
-Reinforcement Beacons Fixed, Consistent Vaulting and Shallow Water Diving.
+Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and
+Sentry Aim Retention.
 Install with Arsenal or HD2MM: import
 BingusSharedLoader.zip, enable it alongside your chosen mods, then click Deploy.
 One loader installation supports all your selected mods.
@@ -23,7 +24,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 
 The loader is a separate required download for current module-only Better
 Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed,
-Consistent Vaulting and Shallow Water Diving.
+Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention.
 It has no gameplay effect alone. Enable the gameplay mods you want to use.
 
 The manager GUID and internal API marker are unchanged.
@@ -45,8 +46,9 @@ The log should show mods/codex/gun_calibration: loaded when it is installed.
 The loader preserves Wwise callbacks and does not replace boot. HUD+ 0.1.3
 retains its own startup. Other startup replacements can still conflict.
 The maintainer confirmed loader-v3 works in-game with Overlay v2.
-Loader-v5 adds Consistent Vaulting and Shallow Water Diving; in-game validation
-of this revision is pending.
+Loader-v6 supports Consistent Vaulting, Shallow Water Diving and optional
+Sentry Aim Retention. API 1 and the manager GUID remain unchanged.
+This prerelease has passed offline checks; live validation remains pending.
 
 Keep this loader enabled while any dependent gameplay mod is enabled.
 To remove it, first disable dependent mods, then disable the loader and Purge/Deploy.

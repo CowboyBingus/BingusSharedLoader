@@ -1,5 +1,16 @@
 # Bingus Shared Loader — release notes
 
+## loader-v6 — module registry update
+
+Registers the optional Sentry Aim Retention module and supports Consistent
+Vaulting data-v8 through the existing registry and API 1 interface. The manager
+GUID, original Wwise callbacks and existing overlay registration are preserved.
+Offline startup checks cover all 256 module-presence combinations. Arsenal
+fixture checks with this loader, the sentry module and Better Stratagem Bounce
+cover all 48 order/enable combinations and purge. Gameplay validation is pending.
+Published as a prerelease while live validation is pending. Download the
+installable ZIP from [loader-v6](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v6).
+
 ## loader-v5 — gameplay module support
 
 Adds startup registration for Consistent Vaulting and Shallow Water Diving.

@@ -3,17 +3,17 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting and Shallow Water Diving.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-[Download loader-v5](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v5). This prerelease adds Consistent Vaulting and Shallow Water Diving; in-game validation of this revision remains pending.
+[Download loader-v6](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v6). This prerelease adds Sentry Aim Retention to the optional registry and supports the current Consistent Vaulting package through the existing API 1 interface.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
 **Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **loader-v5 / API 1**, with in-game validation pending for this revision. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt).
+This is **loader-v6 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass; live validation of this revision remains pending.
 
 ## Supported modules
 
@@ -22,6 +22,7 @@ This is **loader-v5 / API 1**, with in-game validation pending for this revision
 - Reinforcement Beacons Fixed, formerly Reinforcement Beacon Fix.
 - Consistent Vaulting, for local manual-vault candidate processing.
 - Shallow Water Diving, for local airborne water-reference handling.
+- Sentry Aim Retention, for experimental autonomous-sentry target-loss handling.
 - HUD Ballistic Trajectory Overlay **v2**, released September 11, 2026.
 - The reserved Wide Angle Stratagems module, if separately installed.
 

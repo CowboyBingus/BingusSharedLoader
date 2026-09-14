@@ -20,7 +20,8 @@ def resources(path):
               'Wide Angle Stratagems': 'mods/cowboybingus/wide_angle_stratagems',
               'Reinforcement Beacons Fixed': 'mods/cowboybingus/reinforcement_beacon_fix_data',
               'Consistent Vaulting': 'mods/cowboybingus/consistent_vaulting',
-              'Shallow Water Diving': 'mods/cowboybingus/shallow_water_dive'}
+              'Shallow Water Diving': 'mods/cowboybingus/shallow_water_dive',
+              'Sentry Aim Retention': 'mods/cowboybingus/sentry_aim_retention'}
     assert struct.unpack_from('<III', data) == (0xF0000011, 1, 1)
     result = {}
     for index in range(1):

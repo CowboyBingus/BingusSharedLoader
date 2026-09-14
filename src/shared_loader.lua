@@ -1,6 +1,6 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
-state = {version = 6, api = 1, modules = {}}
+state = {version = 7, api = 1, modules = {}}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 local function report(name, status)
@@ -11,7 +11,7 @@ local function report(name, status)
         if not directory then return end
         local file = io.open(directory .. '/BingusSharedLoader.log', 'w')
         if not file then return end
-        file:write('Bingus Shared Loader loader-v5; API 1\n')
+        file:write('Bingus Shared Loader loader-v6; API 1\n')
         for module, result in pairs(state.modules) do
             file:write(module .. ': ' .. result .. '\n')
         end
@@ -27,6 +27,7 @@ for _, name in ipairs({
     'mods/cowboybingus/reinforcement_beacon_fix_data',
     'mods/cowboybingus/consistent_vaulting',
     'mods/cowboybingus/shallow_water_dive',
+    'mods/cowboybingus/sentry_aim_retention',
     'mods/codex/gun_calibration',
 }) do
     local ok, available = pcall(function()
