@@ -9,6 +9,12 @@ def digest(data):
     return hashlib.sha256(data).hexdigest().upper()
 
 
+def release_directory(root: Path) -> Path:
+    # Nested mod projects share the base workspace's release directory.
+    base = root.parent if (root.parent / 'scripts/archive.py').is_file() else root
+    return base / 'releases'
+
+
 def package_release(root: Path, build: Path, report: dict) -> Path:
     files = {}
     for destination, source in report['deployment_files'].items():
@@ -39,7 +45,7 @@ def package_release(root: Path, build: Path, report: dict) -> Path:
     if thumbnail.is_file():
         manager['IconPath'] = option['Image'] = 'thumbnail.png'
     files['manifest.json'] = (json.dumps(manager, indent=2) + '\n').encode()
-    release = root / 'releases' / (slug + '.zip')
+    release = release_directory(root) / (slug + '.zip')
     release.parent.mkdir(exist_ok=True)
     temporary = build / 'release.pending.zip'
     with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

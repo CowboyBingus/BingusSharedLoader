@@ -58,8 +58,8 @@ def main():
              for suffix in ('', '.stream', '.gpu_resources')}
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
-        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v3',
-        'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed. Import this ZIP through Arsenal or HD2MM, enable it alongside your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
+        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v5',
+        'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting and Shallow Water Diving. Import this ZIP through Arsenal or HD2MM, enable it alongside your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
         'provides': {'shared_loader_api': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},
@@ -72,7 +72,7 @@ def main():
         for p in (ROOT / folder).glob(glob)}
     release = package_release(ROOT, BUILD, report)
     tests += run([sys.executable, ROOT / 'tests/test_package.py', release])
-    report['release'] = {'path': release.relative_to(ROOT).as_posix(), 'sha256': sha(release.read_bytes())}
+    report['release'] = {'path': Path(os.path.relpath(release, ROOT)).as_posix(), 'sha256': sha(release.read_bytes())}
     (BUILD / 'build-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(tests.strip())
     print('Built BingusSharedLoader.zip; ' + ('matches the maintainer-tested runtime.'

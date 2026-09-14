@@ -14,6 +14,10 @@ local paths = {
     ['mods/hd2_hud/frag_icon'] = hud .. '/b02f08943274cb87.lua.main',
     ['mods/hd2_hud/frag_idle'] = hud .. '/c622e294f0394777.lua.main',
 }
+if arg[4] then
+    names[#names+1]='mods/cowboybingus/consistent_vaulting'
+    paths[names[#names]]=arg[4]
+end
 local function read(path, resource)
     local file = assert(io.open(path, 'rb'))
     local bytes = file:read('*a'); file:close()
@@ -36,7 +40,9 @@ local function context(mask, audio, have_ffi)
     end
     env._G, env.print = env, function() end
     env.os = {getenv = function() end, clock = os.clock}
-    local count, available = {}, {['mods/cowboybingus/wide_angle_stratagems'] = false}
+    local count, available = {}, {['mods/cowboybingus/wide_angle_stratagems'] = false,
+        ['mods/cowboybingus/shallow_water_dive'] = false,
+        ['mods/cowboybingus/consistent_vaulting'] = false}
     for i, name in ipairs(names) do available[name] = math.floor(mask / 2^(i-1)) % 2 == 1 end
     local observed = {reads = 0, restored = 0, paths = 0, config = '[overlay]\nenabled=false\n'}
     env.io = {open = function(path, mode)
@@ -98,7 +104,7 @@ end
 local total = 0
 for _, use_hud in ipairs({false, true}) do
   for _, audio in ipairs({false, true}) do
-    for mask = 0, 15 do
+    for mask = 0, 2^#names-1 do
         local env, count, execute, available, observed = context(mask, audio, true)
         if use_hud then assert(env.require('boot').installed == true)
         else execute(boot, '@vanilla_boot') end
@@ -148,7 +154,7 @@ for _, use_hud in ipairs({false, true}) do
         assert(a == 'closed' and b == nil and c == 7 and shutdowns == 1)
         assert(observed.restored == (available[overlay] and 14 or 0))
         for name, present in pairs(available) do assert((count[name] or 0) == (present and 1 or 0)) end
-        for _, key in ipairs({'BetterStratagemBounce', 'HellpodSteeringUnlocked', 'ReinforcementBeaconFixData'}) do
+        for _, key in ipairs({'BetterStratagemBounce', 'HellpodSteeringUnlocked', 'ReinforcementBeaconFixData', 'ConsistentVaulting'}) do
             assert(not env[key] or not env[key].active, 'Native behavior escaped the test fixture')
         end
         total = total + 1

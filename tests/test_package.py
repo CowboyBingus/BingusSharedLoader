@@ -22,7 +22,7 @@ with zipfile.ZipFile(sys.argv[1]) as package:
     assert manager['IconPath'] == manager['Options'][0]['Image'] == 'thumbnail.png'
     assert package.read('thumbnail.png').startswith(b'\x89PNG\r\n\x1a\n')
     report = json.loads(package.read('BingusSharedLoader-manifest.json'))
-    assert report['revision'] == 'loader-v3' and report['provides'] == {'shared_loader_api': 1}
+    assert report['revision'] == 'loader-v5' and report['provides'] == {'shared_loader_api': 1}
     for name, expected_hash in report['files'].items():
         assert hashlib.sha256(package.read(name)).hexdigest().upper() == expected_hash
     data = package.read('data/' + ARCHIVE)

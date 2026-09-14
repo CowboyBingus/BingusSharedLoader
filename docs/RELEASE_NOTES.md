@@ -1,4 +1,20 @@
-# Bingus Shared Loader — loader-v3
+# Bingus Shared Loader — release notes
+
+## loader-v5 — gameplay module support
+
+Adds startup registration for Consistent Vaulting and Shallow Water Diving.
+API 1 and the manager GUID remain unchanged; existing gameplay packages stay
+compatible. Missing modules are skipped and failures remain isolated.
+
+Offline tests cover all 128 registered-module combinations, original audio
+callbacks, duplicate loads and callback returns. Package checks verify distinct
+resource ownership across load orders. In-game validation of loader-v5 remains
+pending, so it is published as a prerelease.
+
+Replace the previous loader entry, then Purge and Deploy with the game closed.
+[Download loader-v5](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v5).
+
+## loader-v3
 
 > [!IMPORTANT]
 > **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.

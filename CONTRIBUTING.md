@@ -11,14 +11,14 @@ $env:HD2_CALLBACK_RESOURCE = (Resolve-Path 'artifacts/vanilla/wwise_flow_callbac
 python -B scripts/build.py
 ```
 
-The result is `releases/BingusSharedLoader.zip`; intermediate files and reports go into `build/`. The original callback bytecode is wrapped with the authored coordinator. The boot resource is a test fixture and is not placed in the mod archive. The builder does not install mods or launch the game.
+The result is `releases/BingusSharedLoader.zip` under the base workspace, shared with the gameplay packages. A standalone checkout uses its own base directory. Intermediate files and reports remain in this project's `build/`. The original callback bytecode is wrapped with the authored coordinator. The boot resource is a test fixture and is not placed in the mod archive. The builder does not install mods or launch the game.
 
 ## Optional integration checks
 
-After building the loader, Bounce, Steering and reinforcement projects:
+After building the loader, Bounce, Steering, reinforcement and vaulting projects:
 
 ```text
-python -B tests/test_shared_packages.py <Loader-ZIP> <Bounce-ZIP> <Steering-ZIP> <Reinforcement-ZIP>
+python -B tests/test_shared_packages.py <Loader-ZIP> <Bounce-ZIP> <Steering-ZIP> <Reinforcement-ZIP> <Vaulting-ZIP>
 <LuaJIT> tests/test_hud_compatibility.lua <Loader-build> <Bounce-build> <Steering-build> <HUD-resources> <Reinforcement-build>
 ```
 
@@ -27,7 +27,7 @@ The HUD resources must be supplied locally from the tested HUD+ package. The che
 For HUD Ballistic Trajectory Overlay v2, supply the original extracted package, the HUD+ fixtures and current gameplay ZIPs:
 
 ```text
-python -B tests/test_overlay_compatibility.py <Overlay-v2-folder> <HUD-resources> <Bounce-ZIP> <Steering-ZIP> <Reinforcement-ZIP>
+python -B tests/test_overlay_compatibility.py <Overlay-v2-folder> <HUD-resources> <Bounce-ZIP> <Steering-ZIP> <Reinforcement-ZIP> --vaulting <Vaulting-ZIP>
 ```
 
 This verifies the pinned overlay archive and runs its unchanged Lua module with the compiled loader and gameplay modules. The harness substitutes the overlay's executable-path resolver and configuration file, and blocks gameplay memory APIs. It does not launch the game. Keep third-party fixtures and generated reports under ignored build directories.

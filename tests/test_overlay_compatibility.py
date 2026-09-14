@@ -12,6 +12,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from archive import LUA, TYPE, resource_hash, sha
+from package import release_directory
 
 OVERLAY_SHA = '59D2F64C5E9312C3CA3BF48CF8410FE87821C6C444AACA11090A1D0CDBB12828'
 WWISE = resource_hash('core/wwise/lua/wwise_flow_callbacks')
@@ -44,6 +45,7 @@ def main():
     parser.add_argument('bounce', type=Path)
     parser.add_argument('steering', type=Path)
     parser.add_argument('reinforcement', type=Path)
+    parser.add_argument('--vaulting', type=Path)
     args = parser.parse_args()
     build = ROOT / 'build'
     fixture = build / 'overlay-compatibility'
@@ -65,27 +67,33 @@ def main():
     (fixture / 'overlay.lua.main').write_bytes(original[OVERLAY])
     (fixture / 'overlay-bridge.lua.main').write_bytes(original[WWISE])
 
-    with zipfile.ZipFile(ROOT / 'releases/BingusSharedLoader.zip') as package:
+    loader_zip = release_directory(ROOT) / 'BingusSharedLoader.zip'
+    with zipfile.ZipFile(loader_zip) as package:
         loader = resources(package.read('data/9ba626afa44a3aa3.patch_0'))
     assert set(loader) == {WWISE} and loader[WWISE] == (build / 'callbacks.lua.main').read_bytes()
     assert set(loader) & set(original) == {WWISE}
-    for path, name, filename in (
+    gameplay = [
         (args.bounce, 'better_stratagem_bounce', 'bounce'),
         (args.steering, 'hellpod_steering_unlocked', 'steering'),
         (args.reinforcement, 'reinforcement_beacon_fix_data', 'reinforcement'),
-    ):
+    ]
+    if args.vaulting:
+        gameplay.append((args.vaulting, 'consistent_vaulting', 'vaulting'))
+    for path, name, filename in gameplay:
         with zipfile.ZipFile(path) as package:
             entries = resources(package.read('data/9ba626afa44a3aa3.patch_0'))
         key = resource_hash('mods/cowboybingus/' + name)
         assert set(entries) == {key} and not set(entries) & set(original)
         (fixture / (filename + '.lua.main')).write_bytes(entries[key])
 
-    result = subprocess.run([str(LUA), str(ROOT / 'tests/test_overlay_compatibility.lua'),
-        str(build), str(fixture), str(args.hud)], capture_output=True, text=True)
+    command=[str(LUA), str(ROOT / 'tests/test_overlay_compatibility.lua'),str(build),str(fixture),str(args.hud)]
+    if args.vaulting:
+        command.append(str(fixture / 'vaulting.lua.main'))
+    result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode:
         raise RuntimeError(result.stdout + result.stderr)
     report = {'overlay_archive_sha256': OVERLAY_SHA, 'overlay_resource_sha256': sha(original[OVERLAY]),
-        'loader_archive_sha256': sha((ROOT / 'releases/BingusSharedLoader.zip').read_bytes()),
+        'loader_archive_sha256': sha(loader_zip.read_bytes()),
         'only_overlap': 'core/wwise/lua/wwise_flow_callbacks', 'tests': result.stdout.strip(),
         'game_launched': False, 'rendering_verified': False}
     (build / 'overlay-compatibility.json').write_text(json.dumps(report, indent=2) + '\n')

@@ -3,23 +3,25 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting and Shallow Water Diving.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-[Download loader-v3](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v3)
+[Download loader-v5](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v5). This prerelease adds Consistent Vaulting and Shallow Water Diving; in-game validation of this revision remains pending.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
 **Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **loader-v3 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt).
+This is **loader-v5 / API 1**, with in-game validation pending for this revision. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt).
 
 ## Supported modules
 
 - Better Stratagem Bounce.
 - Hellpod Steering Unlocked.
 - Reinforcement Beacons Fixed, formerly Reinforcement Beacon Fix.
+- Consistent Vaulting, for local manual-vault candidate processing.
+- Shallow Water Diving, for local airborne water-reference handling.
 - HUD Ballistic Trajectory Overlay **v2**, released September 11, 2026.
 - The reserved Wide Angle Stratagems module, if separately installed.
 

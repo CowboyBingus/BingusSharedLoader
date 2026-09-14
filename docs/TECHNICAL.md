@@ -13,10 +13,14 @@ For each registered module, the coordinator first checks `Application.can_get('l
 | Better Stratagem Bounce | `mods/cowboybingus/better_stratagem_bounce` |
 | Hellpod Steering Unlocked | `mods/cowboybingus/hellpod_steering_unlocked` |
 | Reinforcement Beacons Fixed | `mods/cowboybingus/reinforcement_beacon_fix_data` |
+| Consistent Vaulting | `mods/cowboybingus/consistent_vaulting` |
+| Shallow Water Diving | `mods/cowboybingus/shallow_water_dive` |
 | Wide Angle Stratagems, reserved | `mods/cowboybingus/wide_angle_stratagems` |
 | HUD Ballistic Trajectory Overlay v2 | `mods/codex/gun_calibration` |
 
 The withdrawn native reinforcement module name is deliberately not registered. The loader itself performs no process-memory writes and cannot establish that an optional gameplay mod behaves correctly.
+
+Loader-v4 uses internal coordinator version 5 / API 1 and adds Consistent Vaulting before the overlay. The coordinator covers all 64 installed-module combinations. Consistent Vaulting requires this registration and independently validates the local avatar and query records; teammates' controllers are outside its write scope. Gameplay validation of the new module and loader revision remains pending.
 
 ## Maintained overlay support
 
@@ -26,7 +30,7 @@ That archive contains only the Wwise bridge and `mods/codex/gun_calibration` (`0
 
 Both packages still declare the same Wwise resource. The manager must deploy our loader as its winning override. A conflict warning is expected; an overlay bridge that wins instead will not start our gameplay modules. No order is required between the separate CowboyBingus gameplay resources.
 
-The overlay wraps and forwards `update` and `shutdown`. Its existing `HUDBTO.ini` reader and defaults are unchanged. The integration fixture supplies a fake executable-path resolver and blocks gameplay memory APIs; no native game code is executed. Checks cover 64 installed-module/HUD+/Wwise combinations, configuration reads and reloads, callback arguments and return tuples, temporary-memory restoration, missing FFI, cached module loads and repeated coordinator execution. The maintainer separately confirmed loader-v3 works in-game with this overlay; the offline fixture does not simulate live world cleanup or multiplayer.
+The overlay wraps and forwards `update` and `shutdown`. Its existing `HUDBTO.ini` reader and defaults are unchanged. The integration fixture supplies a fake executable-path resolver and blocks gameplay memory APIs; no native game code is executed. Checks cover 64 installed-module/HUD+/Wwise combinations, or 128 when the optional Consistent Vaulting package is supplied, along with configuration reads and reloads, callback arguments and return tuples, temporary-memory restoration, missing FFI, cached module loads and repeated coordinator execution. The maintainer separately confirmed loader-v3 works in-game with this overlay; the offline fixture does not simulate live world cleanup or multiplayer.
 
 The build marks `runtime_verified` only when the compiled callback resource matches the maintainer-tested SHA-256 in `TESTED_CALLBACK_SHA`. Changing the runtime makes a subsequent build unverified until it is tested again. Release documentation and provenance can be updated without changing the tested game resource.
 

@@ -18,7 +18,9 @@ def resources(path):
               'Better Stratagem Bounce': 'mods/cowboybingus/better_stratagem_bounce',
               'Hellpod Steering Unlocked': 'mods/cowboybingus/hellpod_steering_unlocked',
               'Wide Angle Stratagems': 'mods/cowboybingus/wide_angle_stratagems',
-              'Reinforcement Beacons Fixed': 'mods/cowboybingus/reinforcement_beacon_fix_data'}
+              'Reinforcement Beacons Fixed': 'mods/cowboybingus/reinforcement_beacon_fix_data',
+              'Consistent Vaulting': 'mods/cowboybingus/consistent_vaulting',
+              'Shallow Water Diving': 'mods/cowboybingus/shallow_water_dive'}
     assert struct.unpack_from('<III', data) == (0xF0000011, 1, 1)
     result = {}
     for index in range(1):
@@ -31,7 +33,7 @@ def resources(path):
 
 def main():
     entries = list(map(resources, sys.argv[1:]))
-    assert 3 <= len(entries) <= 5
+    assert 3 <= len(entries) <= 7
     names = {name for name, _ in entries}
     assert len(names) == len(entries)
     assert {'Bingus Shared Loader', 'Better Stratagem Bounce', 'Hellpod Steering Unlocked'} <= names

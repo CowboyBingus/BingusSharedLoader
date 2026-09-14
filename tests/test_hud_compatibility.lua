@@ -29,6 +29,8 @@ for mask = 0, loader_bit * 2 - 1 do
         ['mods/cowboybingus/hellpod_steering_unlocked'] = mask % 4 >= 2,
         ['mods/cowboybingus/wide_angle_stratagems'] = false,
         ['mods/codex/gun_calibration'] = false,
+        ['mods/cowboybingus/shallow_water_dive'] = false,
+        ['mods/cowboybingus/consistent_vaulting'] = false,
         ['mods/cowboybingus/reinforcement_beacon_fix_data'] = reinforcement ~= nil and mask % 8 >= 4,
     }
     env.stingray.Application.can_get = function(kind, name)
