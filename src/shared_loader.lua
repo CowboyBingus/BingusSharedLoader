@@ -1,6 +1,6 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
-state = {version = 7, api = 1, modules = {}}
+state = {version = 8, api = 1, modules = {}}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 local function report(name, status)
@@ -11,7 +11,7 @@ local function report(name, status)
         if not directory then return end
         local file = io.open(directory .. '/BingusSharedLoader.log', 'w')
         if not file then return end
-        file:write('Bingus Shared Loader loader-v6; API 1\n')
+        file:write('Bingus Shared Loader loader-v7; API 1\n')
         for module, result in pairs(state.modules) do
             file:write(module .. ': ' .. result .. '\n')
         end
@@ -21,6 +21,7 @@ end
 
 local application = stingray and stingray.Application
 for _, name in ipairs({
+    'mods/cowboybingus/vanilla_plus_megapack',
     'mods/cowboybingus/better_stratagem_bounce',
     'mods/cowboybingus/hellpod_steering_unlocked',
     'mods/cowboybingus/wide_angle_stratagems',

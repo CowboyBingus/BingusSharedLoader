@@ -25,6 +25,8 @@ for mask = 0, loader_bit * 2 - 1 do
     env.io = {open = function() return nil end}
     env.stingray = {Application = {build = function() return 'release' end}}
     local installed = {
+        ['mods/cowboybingus/vanilla_plus_megapack'] = false,
+        ['mods/cowboybingus/sentry_aim_retention'] = false,
         ['mods/cowboybingus/better_stratagem_bounce'] = mask % 2 == 1,
         ['mods/cowboybingus/hellpod_steering_unlocked'] = mask % 4 >= 2,
         ['mods/cowboybingus/wide_angle_stratagems'] = false,

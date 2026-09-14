@@ -3,20 +3,21 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-[Download loader-v6](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v6). This prerelease adds Sentry Aim Retention to the optional registry and supports the current Consistent Vaulting package through the existing API 1 interface.
+[Download loader-v7](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v7). This prerelease adds [Vanilla Plus Megapack](https://github.com/CowboyBingus/VanillaPlusMegapack), which combines all six gameplay mods into one install. The loader remains a separate download. Disable individual gameplay copies when using the megapack.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
 **Install:** Close Helldivers 2. Import `BingusSharedLoader.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **loader-v6 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass; live validation of this revision remains pending.
+This is **loader-v7 / API 1**. Replace the previous loader entry, then **Purge → Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass; live validation of this revision remains pending.
 
 ## Supported modules
 
+- Vanilla Plus Megapack, including all six CowboyBingus gameplay modules below.
 - Better Stratagem Bounce.
 - Hellpod Steering Unlocked.
 - Reinforcement Beacons Fixed, formerly Reinforcement Beacon Fix.

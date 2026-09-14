@@ -1,7 +1,7 @@
-Bingus Shared Loader — loader-v6 / API 1
+Bingus Shared Loader — loader-v7 / API 1
 
 REQUIRED DEPENDENCY
-Required by current Better Stratagem Bounce, Hellpod Steering Unlocked,
+Required by Vanilla Plus Megapack or current Better Stratagem Bounce, Hellpod Steering Unlocked,
 Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and
 Sentry Aim Retention.
 Install with Arsenal or HD2MM: import
@@ -19,7 +19,9 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 1. Close Helldivers 2.
 2. Remove or replace the previous Shared Mod Loader / Bingus Shared Loader entry
    in HDArsenal or HD2MM. Use only one manager.
-3. Import BingusSharedLoader.zip and your chosen current gameplay module ZIPs.
+3. Import BingusSharedLoader.zip and VanillaPlusMegapack.zip or your chosen
+   current gameplay module ZIPs. Disable individual gameplay copies when
+   using the megapack; the pack already contains all six mods.
 4. Enable the loader and the gameplay mods, then Purge and Deploy.
 
 The loader is a separate required download for current module-only Better
@@ -46,8 +48,9 @@ The log should show mods/codex/gun_calibration: loaded when it is installed.
 The loader preserves Wwise callbacks and does not replace boot. HUD+ 0.1.3
 retains its own startup. Other startup replacements can still conflict.
 The maintainer confirmed loader-v3 works in-game with Overlay v2.
-Loader-v6 supports Consistent Vaulting, Shallow Water Diving and optional
-Sentry Aim Retention. API 1 and the manager GUID remain unchanged.
+Loader-v7 adds Vanilla Plus Megapack and retains every separate module.
+API 1 and the manager GUID remain unchanged. The megapack log entry is
+mods/cowboybingus/vanilla_plus_megapack; its six gameplay entries follow.
 This prerelease has passed offline checks; live validation remains pending.
 
 Keep this loader enabled while any dependent gameplay mod is enabled.

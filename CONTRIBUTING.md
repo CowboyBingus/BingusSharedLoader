@@ -34,4 +34,8 @@ This verifies the pinned overlay archive and runs its unchanged Lua module with 
 
 `scripts/test_arsenal_packages.cjs` accepts an unpacked HDArsenal application and an isolated output directory; inspect its argument documentation before use. Its optional final ZIP can be the original overlay package, including its `Overlay` option folder. Application sources, user profiles, game data and test outputs are not publication inputs.
 
+For the two-package megapack installation, pass only the loader ZIP and megapack ZIP after the fixture arguments. This exercises both load orders and all enable/disable subsets, including title, description, icon, archive renumbering and purge behavior. The megapack repository also supplies `tests/test_loader.lua` to run its compiled identity and all six gameplay resources against this loader build.
+
+After the overlay fixture has been prepared by `test_overlay_compatibility.py`, its Lua harness accepts a fifth argument pointing to the megapack build directory (after the optional vaulting resource). This checks all six bundled modules and the pack identity alongside Overlay v2 and HUD+ across 1,024 startup combinations.
+
 Keep the manager GUID, `CowboyBingusModLoader` API marker and existing module resource names stable. Preserve original callbacks, one-time startup, missing-module checks and failure isolation. No repository-wide license has been selected.

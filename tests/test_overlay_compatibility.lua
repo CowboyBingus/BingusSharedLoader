@@ -18,6 +18,23 @@ if arg[4] then
     names[#names+1]='mods/cowboybingus/consistent_vaulting'
     paths[names[#names]]=arg[4]
 end
+-- Optional complete megapack build: use the actual bundled gameplay payloads.
+if arg[5] then
+    local pack_build = arg[5]
+    paths['mods/cowboybingus/better_stratagem_bounce'] = pack_build .. '/BetterStratagemBounce/mod.lua.main'
+    paths['mods/cowboybingus/hellpod_steering_unlocked'] = pack_build .. '/HellpodSteeringUnlocked/mod.lua.main'
+    paths['mods/cowboybingus/reinforcement_beacon_fix_data'] = pack_build .. '/ReinforcementBeaconsFixed/mod.lua.main'
+    local additions = {
+        {'mods/cowboybingus/vanilla_plus_megapack', '/mod.lua.main'},
+        {'mods/cowboybingus/consistent_vaulting', '/ConsistentVaulting/mod.lua.main'},
+        {'mods/cowboybingus/shallow_water_dive', '/ShallowWaterDiving/mod.lua.main'},
+        {'mods/cowboybingus/sentry_aim_retention', '/SentryAimRetention/mod.lua.main'},
+    }
+    for _, item in ipairs(additions) do
+        if not paths[item[1]] then names[#names+1] = item[1] end
+        paths[item[1]] = pack_build .. item[2]
+    end
+end
 local function read(path, resource)
     local file = assert(io.open(path, 'rb'))
     local bytes = file:read('*a'); file:close()
@@ -41,6 +58,8 @@ local function context(mask, audio, have_ffi)
     env._G, env.print = env, function() end
     env.os = {getenv = function() end, clock = os.clock}
     local count, available = {}, {['mods/cowboybingus/wide_angle_stratagems'] = false,
+        ['mods/cowboybingus/vanilla_plus_megapack'] = false,
+        ['mods/cowboybingus/sentry_aim_retention'] = false,
         ['mods/cowboybingus/shallow_water_dive'] = false,
         ['mods/cowboybingus/consistent_vaulting'] = false}
     for i, name in ipairs(names) do available[name] = math.floor(mask / 2^(i-1)) % 2 == 1 end
@@ -154,7 +173,7 @@ for _, use_hud in ipairs({false, true}) do
         assert(a == 'closed' and b == nil and c == 7 and shutdowns == 1)
         assert(observed.restored == (available[overlay] and 14 or 0))
         for name, present in pairs(available) do assert((count[name] or 0) == (present and 1 or 0)) end
-        for _, key in ipairs({'BetterStratagemBounce', 'HellpodSteeringUnlocked', 'ReinforcementBeaconFixData', 'ConsistentVaulting'}) do
+        for _, key in ipairs({'BetterStratagemBounce', 'HellpodSteeringUnlocked', 'ReinforcementBeaconFixData', 'ConsistentVaulting', 'ShallowWaterDive', 'SentryAimRetention'}) do
             assert(not env[key] or not env[key].active, 'Native behavior escaped the test fixture')
         end
         total = total + 1

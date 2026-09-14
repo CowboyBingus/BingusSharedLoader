@@ -1,5 +1,11 @@
 # Bingus Shared Loader — release notes
 
+## loader-v7 — Vanilla Plus Megapack support
+
+Adds `mods/cowboybingus/vanilla_plus_megapack` to the optional registry. The megapack combines all six current CowboyBingus gameplay modules in one manager entry and keeps this loader as a separate dependency. Existing module startup order, API 1, manager GUID, Wwise callbacks and overlay support are preserved.
+
+Replace the old loader, disable individual gameplay copies when using the megapack, then Purge / Deploy. Use loader-last ordering with Arsenal's default priority. Offline verification covers all 512 registry combinations; live validation of this revision remains pending.
+
 ## loader-v6 — module registry update
 
 Registers the optional Sentry Aim Retention module and supports Consistent

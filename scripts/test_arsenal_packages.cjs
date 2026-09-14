@@ -1,6 +1,8 @@
 // Runs the installed manager backend against an isolated filesystem and profile.
 // Usage: node scripts/test_arsenal_packages.cjs <Loader-ZIP> <Arsenal-source>
 //        <new-output-directory> <Bounce-ZIP> <Steering-ZIP> [Reinforcement-ZIP] [Overlay-ZIP]
+// Megapack: node scripts/test_arsenal_packages.cjs <Loader-ZIP> <Arsenal-source>
+//           <new-output-directory> <Megapack-ZIP>
 // Arsenal-source must contain obfuscated_src/main and its node_modules.
 const fs = require('fs');
 const path = require('path');
@@ -83,7 +85,7 @@ async function verifyPresentation(mod, packageZip) {
 }
 (async()=>{
  const releases=[release,...process.argv.slice(5).map(p=>path.resolve(p))];
- assert(releases.length>=3 && releases.length<=5);
+ assert(releases.length>=2 && releases.length<=5);
  const packages=releases.map(p=>new AdmZip(p));
  const archiveEntries=packages.map(pack=>{
   const manifest=JSON5.parse(pack.readAsText('manifest.json'));
