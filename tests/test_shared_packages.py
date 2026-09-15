@@ -13,7 +13,10 @@ from archive import resource_hash
 def resources(path):
     with zipfile.ZipFile(path) as package:
         data = package.read('data/9ba626afa44a3aa3.patch_0')
-        name = json.loads(package.read('manifest.json'))['Name']
+        manager = json.loads(package.read('manifest.json'))
+        provenance = json.loads(package.read(next(n for n in package.namelist() if n.endswith('-manifest.json'))))
+        name = provenance['name']
+        assert manager['Name'] == name + ' - ' + provenance['display_version']
     owners = {'Bingus Shared Loader': 'core/wwise/lua/wwise_flow_callbacks',
               'Better Stratagem Bounce': 'mods/cowboybingus/better_stratagem_bounce',
               'Hellpod Steering Unlocked': 'mods/cowboybingus/hellpod_steering_unlocked',
@@ -21,7 +24,8 @@ def resources(path):
               'Reinforcement Beacons Fixed': 'mods/cowboybingus/reinforcement_beacon_fix_data',
               'Consistent Vaulting': 'mods/cowboybingus/consistent_vaulting',
               'Shallow Water Diving': 'mods/cowboybingus/shallow_water_dive',
-              'Sentry Aim Retention': 'mods/cowboybingus/sentry_aim_retention'}
+              'Sentry Aim Retention': 'mods/cowboybingus/sentry_aim_retention',
+              'Enemy Collision Synchronized': 'mods/cowboybingus/corpse_collision_repair'}
     assert struct.unpack_from('<III', data) == (0xF0000011, 1, 1)
     result = {}
     for index in range(1):
@@ -34,7 +38,7 @@ def resources(path):
 
 def main():
     entries = list(map(resources, sys.argv[1:]))
-    assert 3 <= len(entries) <= 7
+    assert 3 <= len(entries) <= 8
     names = {name for name, _ in entries}
     assert len(names) == len(entries)
     assert {'Bingus Shared Loader', 'Better Stratagem Bounce', 'Hellpod Steering Unlocked'} <= names

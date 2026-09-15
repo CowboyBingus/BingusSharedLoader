@@ -23,12 +23,16 @@ def package_release(root: Path, build: Path, report: dict) -> Path:
             raise ValueError('Build output changed before packaging: ' + source)
         files[destination] = data
     slug = report['slug']
+    # Public names share one format; provenance keeps the internal build revision.
+    release_version = 'v' + str(report.get('version') or report['revision']).rsplit('v', 1)[-1]
+    display_name = report['name'] + ' - ' + release_version
+    release_stem = report['name'].replace(' ', '-') + '-' + release_version
     files[slug + '-README.txt'] = (root / 'INSTALL.txt').read_bytes()
     thumbnail = root / 'assets/thumbnail.png'
     if thumbnail.is_file():
         files['thumbnail.png'] = thumbnail.read_bytes()
     provenance = {
-        'name': report['name'], 'revision': report['revision'],
+        'name': report['name'], 'revision': report['revision'], 'display_version': release_version,
         'steam_build': 24826606, 'exe_version': '1.8.45317.0',
         'game_exe_sha256': report['game_exe_sha256'],
         'game_dll_sha256': report['game_dll_sha256'],
@@ -39,13 +43,13 @@ def package_release(root: Path, build: Path, report: dict) -> Path:
         if key in report:
             provenance[key] = report[key]
     files[slug + '-manifest.json'] = (json.dumps(provenance, indent=2) + '\n').encode()
-    option = {'Name': report['name'], 'Description': report['description'], 'Include': ['data']}
-    manager = {'Version': 1, 'Guid': report['guid'], 'Name': report['name'],
+    option = {'Name': display_name, 'Description': report['description'], 'Include': ['data']}
+    manager = {'Version': 1, 'Guid': report['guid'], 'Name': display_name,
                'Description': report['description'], 'Options': [option]}
     if thumbnail.is_file():
         manager['IconPath'] = option['Image'] = 'thumbnail.png'
     files['manifest.json'] = (json.dumps(manager, indent=2) + '\n').encode()
-    release = release_directory(root) / (slug + '.zip')
+    release = release_directory(root) / (release_stem + '.zip')
     release.parent.mkdir(exist_ok=True)
     temporary = build / 'release.pending.zip'
     with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
