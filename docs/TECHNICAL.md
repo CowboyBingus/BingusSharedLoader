@@ -4,7 +4,7 @@ Bingus Shared Loader owns one Lua resource: `core/wwise/lua/wwise_flow_callbacks
 
 The coordinator exposes `CowboyBingusModLoader.api == 1`. That internal marker remains unchanged from the former Shared Mod Loader package. Its manager GUID is `612eaf70-d682-43c7-9efd-16dcc695f977`.
 
-For each registered module, the coordinator first checks `Application.can_get('lua', name)`. Missing resources are skipped before `require`; lookup and load failures are recorded without preventing later modules from starting. A global state marker prevents duplicate initialization.
+For each registered module, the coordinator first checks `Application.can_get('lua', name)`. Missing resources are skipped before `require`. lookup and load failures are recorded without preventing later modules from starting. A global state marker prevents duplicate initialization.
 
 ## Stable module names
 
@@ -34,13 +34,13 @@ The supported input is [HUD Ballistic Trajectory Overlay v2](https://www.nexusmo
 
 That archive contains only the Wwise bridge and `mods/codex/gun_calibration` (`0x9537023F38D32BCD`). The bridge's embedded original Wwise bytecode matches our build input exactly. Our coordinator therefore runs the original callbacks and requires the separately installed overlay module after the registered gameplay modules. It does not execute the overlay's redundant bridge or copy its implementation. The bridge also attempts `mods/codex/pickup_icons`, which is absent from this release and is not registered as a supported mod.
 
-Both packages still declare the same Wwise resource. The manager must deploy our loader as its winning override. A conflict warning is expected; an overlay bridge that wins instead will not start our gameplay modules. No order is required between the separate CowboyBingus gameplay resources.
+Both packages still declare the same Wwise resource. The manager must deploy our loader as its winning override. A conflict warning is expected. an overlay bridge that wins instead will not start our gameplay modules. No order is required between the separate CowboyBingus gameplay resources.
 
-The overlay wraps and forwards `update` and `shutdown`. Its existing `HUDBTO.ini` reader and defaults are unchanged. The integration fixture supplies a fake executable-path resolver and blocks gameplay memory APIs; no native game code is executed. Checks cover 64 installed-module/HUD+/Wwise combinations, or 128 when the optional Consistent Vaulting package is supplied, along with configuration reads and reloads, callback arguments and return tuples, temporary-memory restoration, missing FFI, cached module loads and repeated coordinator execution. The maintainer separately confirmed loader-v3 works in-game with this overlay; the offline fixture does not simulate live world cleanup or multiplayer.
+The overlay wraps and forwards `update` and `shutdown`. Its existing `HUDBTO.ini` reader and defaults are unchanged. The integration fixture supplies a fake executable-path resolver and blocks gameplay memory APIs. no native game code is executed. Checks cover 64 installed-module/HUD+/Wwise combinations, or 128 when the optional Consistent Vaulting package is supplied, along with configuration reads and reloads, callback arguments and return tuples, temporary-memory restoration, missing FFI, cached module loads and repeated coordinator execution. The maintainer separately confirmed loader-v3 works in-game with this overlay. the offline fixture does not simulate live world cleanup or multiplayer.
 
 The build marks `runtime_verified` only when the compiled callback resource matches the maintainer-tested SHA-256 in `TESTED_CALLBACK_SHA`. Changing the runtime makes a subsequent build unverified until it is tested again. Release documentation and provenance can be updated without changing the tested game resource.
 
-The fixture hash pins the reviewed release during verification. Runtime discovery checks the resource name, not a release fingerprint; a future release using that name will also be attempted and is not automatically certified compatible. Reinspect changed releases and update the fixture only after validating the new startup contract.
+The fixture hash pins the reviewed release during verification. Runtime discovery checks the resource name, not a release fingerprint. a future release using that name will also be attempted and is not automatically certified compatible. Reinspect changed releases and update the fixture only after validating the new startup contract.
 
 ## Compatibility and publication
 

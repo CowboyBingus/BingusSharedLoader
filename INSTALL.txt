@@ -21,7 +21,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
    in HDArsenal or HD2MM. Use only one manager.
 3. Import Bingus-Shared-Loader-v12.zip and Vanilla-Plus-Megapack-v7.zip or your chosen
    current gameplay module ZIPs. Current standalone copies can remain
-   installed alongside the megapack; give the pack winning priority over them.
+   installed alongside the megapack. give the pack winning priority over them.
 4. Enable the loader and the gameplay mods, then Purge and Deploy.
 
 The loader is a separate required download for current module-only Better
@@ -51,7 +51,7 @@ retains its own startup. Other startup replacements can still conflict.
 The maintainer confirmed v3 works in-game with Overlay v2.
 Loader-v7 adds Vanilla Plus Megapack and retains every separate module.
 API 1 and the manager GUID remain unchanged. The megapack log entry is
-mods/cowboybingus/vanilla_plus_megapack; its gameplay entries follow.
+mods/cowboybingus/vanilla_plus_megapack. its gameplay entries follow.
 This release has passed offline startup and callback checks.
 
 Keep this loader enabled while any dependent gameplay mod is enabled.

@@ -13,21 +13,21 @@ Registers Controllable Hover Pack and retains the optional Vehicle Stability mod
 
 - Registers the optional Vehicle Stability module for the Bastion and gunner FRV.
 - Keeps API 1 and existing module identities. Checks all 2,048 optional-module combinations.
-- This new loader build and the vehicle intervention require in-game validation; previous loader gameplay confirmations do not validate the new module.
+- This new loader build and the vehicle intervention require in-game validation. previous loader gameplay confirmations do not validate the new module.
 
 ## loader-v9
 
-Versioned Arsenal names and ZIP filenames; updated Enemy Collision Synchronized branding and installation guidance for the seven-component megapack. Retains the existing registry, API 1, manager GUID and callback handling. Runtime marker advances to 10.
+Versioned Arsenal names and ZIP filenames. updated Enemy Collision Synchronized branding and installation guidance for the seven-component megapack. Retains the existing registry, API 1, manager GUID and callback handling. Runtime marker advances to 10.
 
-# Bingus Shared Loader — release notes
+# Bingus Shared Loader - release notes
 
-## loader-v7 — Vanilla Plus Megapack support
+## loader-v7 - Vanilla Plus Megapack support
 
 Adds `mods/cowboybingus/vanilla_plus_megapack` to the optional registry. The megapack combines all six current CowboyBingus gameplay modules in one manager entry and keeps this loader as a separate dependency. Existing module startup order, API 1, manager GUID, Wwise callbacks and overlay support are preserved.
 
-Replace the old loader, disable individual gameplay copies when using the megapack, then Purge / Deploy. Use loader-last ordering with Arsenal's default priority. Offline verification covers all 512 registry combinations; live validation of this revision remains pending.
+Replace the old loader, disable individual gameplay copies when using the megapack, then Purge / Deploy. Use loader-last ordering with Arsenal's default priority. Offline verification covers all 512 registry combinations. live validation of this revision remains pending.
 
-## loader-v6 — module registry update
+## loader-v6 - module registry update
 
 Registers the optional Sentry Aim Retention module and supports Consistent
 Vaulting data-v8 through the existing registry and API 1 interface. The manager
@@ -38,10 +38,10 @@ cover all 48 order/enable combinations and purge. Gameplay validation is pending
 Published as a prerelease while live validation is pending. Download the
 installable ZIP from [loader-v6](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/loader-v6).
 
-## loader-v5 — gameplay module support
+## loader-v5 - gameplay module support
 
 Adds startup registration for Consistent Vaulting and Shallow Water Diving.
-API 1 and the manager GUID remain unchanged; existing gameplay packages stay
+API 1 and the manager GUID remain unchanged. existing gameplay packages stay
 compatible. Missing modules are skipped and failures remain isolated.
 
 Offline tests cover all 128 registered-module combinations, original audio
@@ -57,9 +57,9 @@ Replace the previous loader entry, then Purge and Deploy with the game closed.
 > [!IMPORTANT]
 > **Required dependency for Better Stratagem Bounce, Hellpod Steering Unlocked and Reinforcement Beacons Fixed.** Install with **Arsenal or HD2MM**: import `BingusSharedLoader.zip`, enable it alongside your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
-> **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge → Deploy**. If you enabled first-mod priority, place the loader first instead.
+> **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge to Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-Adds built-in startup support for HUD Ballistic Trajectory Overlay v2, released September 11, 2026. Install the original overlay separately and give Bingus Shared Loader the winning priority over it. Arsenal's shared-file warning remains expected; no extra compatibility package is required.
+Adds built-in startup support for HUD Ballistic Trajectory Overlay v2, released September 11, 2026. Install the original overlay separately and give Bingus Shared Loader the winning priority over it. Arsenal's shared-file warning remains expected. no extra compatibility package is required.
 
 Install `BingusSharedLoader.zip` alongside the chosen gameplay mods. Replace the previous loader entry, then Purge and Deploy with the game closed. Do not install old and renamed copies together.
 
@@ -75,4 +75,4 @@ Download `BingusSharedLoader.zip` for installation. `BingusSharedLoader-source.z
 
 ## loader-v11 candidate
 
-Adds the optional Hover Pack Cancel resource. Existing module identities and ordering, API 1, manager GUID and Wwise callback preservation remain unchanged. Offline startup and package checks pass; this revision has not been validated in-game.
+Adds the optional Hover Pack Cancel resource. Existing module identities and ordering, API 1, manager GUID and Wwise callback preservation remain unchanged. Offline startup and package checks pass. this revision has not been validated in-game.
