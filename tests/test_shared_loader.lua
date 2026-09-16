@@ -3,7 +3,7 @@ local names = {'mods/cowboybingus/better_stratagem_bounce', 'mods/cowboybingus/h
                'mods/cowboybingus/wide_angle_stratagems', 'mods/cowboybingus/reinforcement_beacon_fix_data',
                'mods/cowboybingus/consistent_vaulting', 'mods/cowboybingus/shallow_water_dive',
                'mods/cowboybingus/sentry_aim_retention', 'mods/codex/gun_calibration',
-               'mods/cowboybingus/vanilla_plus_megapack', 'mods/cowboybingus/corpse_collision_repair', 'mods/cowboybingus/vehicle_stability', 'mods/cowboybingus/hover_pack_cancel'}
+               'mods/cowboybingus/vanilla_plus_megapack', 'mods/cowboybingus/corpse_collision_repair', 'mods/cowboybingus/vehicle_stability', 'mods/cowboybingus/hover_pack_cancel', 'mods/cowboybingus/enemy_intelligence'}
 
 local function environment(audio)
     local env = setmetatable({print = function() end, os = {getenv = function() end},
@@ -23,8 +23,8 @@ local function execute(path, env)
 end
 
 for _, audio in ipairs({false, true}) do
-  for mask = 0, 4095 do
-    for _, failure in ipairs({'none', 'lookup', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth'}) do
+  for mask = 0, 8191 do
+    for _, failure in ipairs({'none', 'lookup', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth'}) do
         local env, vanilla = environment(audio), environment(audio)
         local count, updates, hud_updates = {}, 0, 0
         local function required(name)
@@ -59,7 +59,8 @@ for _, audio in ipairs({false, true}) do
                     or failure == 'third' and name == names[3] or failure == 'fourth' and name == names[4]
                     or failure == 'fifth' and name == names[5] or failure == 'sixth' and name == names[6]
                     or failure == 'seventh' and name == names[7] or failure == 'eighth' and name == names[8]
-                    or failure == 'ninth' and name == names[9] or failure == 'tenth' and name == names[10] or failure == 'eleventh' and name == names[11] or failure == 'twelfth' and name == names[12] then
+                    or failure == 'ninth' and name == names[9] or failure == 'tenth' and name == names[10] or failure == 'eleventh' and name == names[11] or failure == 'twelfth' and name == names[12]
+                    or failure == 'thirteenth' and name == names[13] then
                     error('module failure')
                 end
                 local previous = env.update
@@ -69,7 +70,7 @@ for _, audio in ipairs({false, true}) do
             return required(name)
         end
         env.init()
-        assert(env.CowboyBingusModLoader.version == 12 and env.CowboyBingusModLoader.api == 1)
+        assert(env.CowboyBingusModLoader.version == 13 and env.CowboyBingusModLoader.api == 1)
         local previous = env.update
         env.update = function(...)
             hud_updates = hud_updates + 1
@@ -101,4 +102,4 @@ end
 local env = environment(false)
 execute(source .. '/shared_loader.lua', env)
 assert(env.CowboyBingusModLoader.modules[names[1]]:find('lookup failed', 1, true))
-print('PASS: shared coordinator covers all 4096 mod combinations, lookup/module failure isolation, duplicate loads, update returns and original audio callbacks')
+print('PASS: shared coordinator covers all 8192 mod combinations, lookup/module failure isolation, duplicate loads, update returns and original audio callbacks')

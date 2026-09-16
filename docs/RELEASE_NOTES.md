@@ -1,3 +1,10 @@
+## loader-v12
+
+- Registers Know Your Constellation through its stable internal module identity.
+- Retains API 1, existing module order, callback forwarding and optional-mod isolation.
+- The packaged runtime matches the loader used for in-game confirmation of Know Your Constellation.
+- Supports Vanilla Plus Megapack v7 with the loader installed separately.
+
 ## loader-v11
 
 Registers Controllable Hover Pack and retains the optional Vehicle Stability module, API 1, existing resource identities and callback handling. Controllable Hover Pack's manual cutoff and native landing assistance were confirmed in-game with this loader. Missing optional modules remain isolated.

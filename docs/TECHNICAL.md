@@ -17,14 +17,16 @@ For each registered module, the coordinator first checks `Application.can_get('l
 | Consistent Vaulting | `mods/cowboybingus/consistent_vaulting` |
 | Shallow Water Diving | `mods/cowboybingus/shallow_water_dive` |
 | Sentry Aim Retention | `mods/cowboybingus/sentry_aim_retention` |
+| Enemy Collision Synchronized | `mods/cowboybingus/corpse_collision_repair` |
+| Vehicle Stability, optional experimental module | `mods/cowboybingus/vehicle_stability` |
+| Controllable Hover Pack | `mods/cowboybingus/hover_pack_cancel` |
+| Know Your Constellation | `mods/cowboybingus/enemy_intelligence` |
 | Wide Angle Stratagems, reserved | `mods/cowboybingus/wide_angle_stratagems` |
 | HUD Ballistic Trajectory Overlay v2 | `mods/codex/gun_calibration` |
 
 The withdrawn native reinforcement module name is deliberately not registered. The loader itself performs no process-memory writes and cannot establish that an optional gameplay mod behaves correctly.
 
-Loader-v7 uses internal coordinator version 8 / API 1 and checks the megapack identity before the existing gameplay registry. The pack's identity publishes its six-member inventory; the normal registry still starts each gameplay resource exactly once in the existing order. It adds no second startup chain. The pack owns its identity and six gameplay resources, while this loader continues to own only Wwise callbacks. The exhaustive coordinator test covers all 512 registry combinations, including missing resources and failures. Pack and standalone copies overlap gameplay resources and should not be enabled together.
-
-Loader-v4 uses internal coordinator version 5 / API 1 and adds Consistent Vaulting before the overlay. The coordinator covers all 64 installed-module combinations. Consistent Vaulting requires this registration and independently validates the local avatar and query records; teammates' controllers are outside its write scope. Gameplay validation of the new module and loader revision remains pending.
+Loader-v12 uses internal coordinator version 13 / API 1 and checks the megapack identity before the existing gameplay registry. Megapack v7 publishes its nine-component inventory. The normal registry starts each resource once in the existing order. The pack owns its identity and component resources, while this loader owns only Wwise callbacks. The exhaustive coordinator test covers all 8,192 registry combinations with lookup and module failures. Pack and standalone copies may coexist through their shared resource identities and per-mod guards. Manager priority determines which version wins.
 
 ## Maintained overlay support
 
