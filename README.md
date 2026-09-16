@@ -3,17 +3,17 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v9.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v11.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge â†’ Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-**v9 / API 1** supports Enemy Collision Synchronized as a standalone mod or as part of Vanilla Plus Megapack v2. Current standalone copies may remain installed alongside the pack; shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
+**v11 / API 1** adds the optional Controllable Hover Pack module and supports Enemy Collision Synchronized as a standalone mod or as part of Vanilla Plus Megapack v6. Current standalone copies may remain installed alongside the pack; shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
-**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v9.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
+**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v11.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **v9 / API 1**. Replace the previous loader entry, then **Purge â†’ Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass; live validation of this revision remains pending.
+This is **v11 / API 1**. Replace the previous loader entry, then **Purge â†’ Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass, and Controllable Hover Pack was confirmed working in-game with this loader.
 
 ## Supported modules
 
@@ -25,6 +25,8 @@ This is **v9 / API 1**. Replace the previous loader entry, then **Purge â†’
 - Shallow Water Diving, for local airborne water-reference handling.
 - Sentry Aim Retention, for experimental autonomous-sentry target-loss handling.
 - Enemy Collision Synchronized, for compatible large enemy corpses across all three factions.
+- Controllable Hover Pack, for manual hover cutoff with native landing assistance using the Jump Pack control (default Space).
+- Vehicle Stability, for experimental local-driver yaw assistance on the Bastion and gunner FRV.
 - HUD Ballistic Trajectory Overlay **v2**, released September 11, 2026.
 - The reserved Wide Angle Stratagems module, if separately installed.
 

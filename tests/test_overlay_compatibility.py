@@ -67,7 +67,7 @@ def main():
     (fixture / 'overlay.lua.main').write_bytes(original[OVERLAY])
     (fixture / 'overlay-bridge.lua.main').write_bytes(original[WWISE])
 
-    loader_zip = release_directory(ROOT) / 'Bingus-Shared-Loader-v9.zip'
+    loader_zip = release_directory(ROOT) / 'Bingus-Shared-Loader-v10.zip'
     with zipfile.ZipFile(loader_zip) as package:
         loader = resources(package.read('data/9ba626afa44a3aa3.patch_0'))
     assert set(loader) == {WWISE} and loader[WWISE] == (build / 'callbacks.lua.main').read_bytes()

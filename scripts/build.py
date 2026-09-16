@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / 'build'
 CALLBACK_SHA = '05BBF52978028758B39F5B91A30A695D20069CEABD774D88755F0582A296BEC9'
 CALLBACK_PATH = 'core/wwise/lua/wwise_flow_callbacks'
-TESTED_CALLBACK_SHA = 'F17499FCAD89D7C549600E7354F20CDE17C6C84D907F411F1C91C6D68585C8E9'
+TESTED_CALLBACK_SHA = '77C5DBCAB8A5A42102036B81AE5443955006C23DC605FFCD1FC46B23206C34E5'
 
 
 def run(args, **kwargs):
@@ -58,8 +58,8 @@ def main():
              for suffix in ('', '.stream', '.gpu_resources')}
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
-        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v9',
-        'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods. Import this ZIP through Arsenal or HD2MM, enable it alongside the megapack or your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
+        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v11',
+        'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods. Import this ZIP through Arsenal or HD2MM, enable it alongside the megapack or your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
         'provides': {'shared_loader_api': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},

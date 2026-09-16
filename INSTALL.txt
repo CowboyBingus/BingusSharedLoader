@@ -1,11 +1,11 @@
-Bingus Shared Loader - v9
+Bingus Shared Loader - v11
 
 REQUIRED DEPENDENCY
 Required by Vanilla Plus Megapack or current Better Stratagem Bounce, Hellpod Steering Unlocked,
 Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving,
-Sentry Aim Retention, and Enemy Collision Synchronized.
+Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Controllable Hover Pack.
 Install with Arsenal or HD2MM: import
-Bingus-Shared-Loader-v9.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v11.zip, enable it alongside your chosen mods, then click Deploy.
 One loader installation supports all your selected mods.
 
 ARSENAL LOAD ORDER
@@ -19,7 +19,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 1. Close Helldivers 2.
 2. Remove or replace the previous Shared Mod Loader / Bingus Shared Loader entry
    in HDArsenal or HD2MM. Use only one manager.
-3. Import Bingus-Shared-Loader-v9.zip and Vanilla-Plus-Megapack-v2.zip or your chosen
+3. Import Bingus-Shared-Loader-v11.zip and Vanilla-Plus-Megapack-v2.zip or your chosen
    current gameplay module ZIPs. Current standalone copies can remain
    installed alongside the megapack; give the pack winning priority over them.
 4. Enable the loader and the gameplay mods, then Purge and Deploy.
@@ -27,7 +27,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 The loader is a separate required download for current module-only Better
 Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed,
 Consistent Vaulting, Shallow Water Diving, Sentry Aim Retention, and
-Enemy Collision Synchronized.
+Enemy Collision Synchronized, Vehicle Stability, and Controllable Hover Pack.
 It has no gameplay effect alone. Enable the gameplay mods you want to use.
 
 The manager GUID and internal API marker are unchanged.
@@ -59,5 +59,7 @@ To remove it, first disable dependent mods, then disable the loader and Purge/De
 
 Developed with assistance from GPT-6 Astra.
 
-Loader-v9 supports Enemy Collision Synchronized alone or inside Megapack v2.
+Loader-v9 supports Enemy Collision Synchronized alone or inside the Megapack.
 Its legacy module identity is retained for compatible upgrades.
+
+Loader-v11 discovers mods/cowboybingus/hover_pack_cancel. Controllable Hover Pack v1 is a separate optional installation, confirmed working in-game.

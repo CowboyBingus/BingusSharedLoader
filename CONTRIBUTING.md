@@ -11,7 +11,7 @@ $env:HD2_CALLBACK_RESOURCE = (Resolve-Path 'artifacts/vanilla/wwise_flow_callbac
 python -B scripts/build.py
 ```
 
-The result is `releases/Bingus-Shared-Loader-v9.zip` under the base workspace, shared with the gameplay packages. A standalone checkout uses its own base directory. Intermediate files and reports remain in this project's `build/`. The original callback bytecode is wrapped with the authored coordinator. The boot resource is a test fixture and is not placed in the mod archive. The builder does not install mods or launch the game.
+The result is `releases/Bingus-Shared-Loader-v11.zip` under the base workspace, shared with the gameplay packages. A standalone checkout uses its own base directory. Intermediate files and reports remain in this project's `build/`. The original callback bytecode is wrapped with the authored coordinator. The boot resource is a test fixture and is not placed in the mod archive. The builder does not install mods or launch the game.
 
 ## Optional integration checks
 

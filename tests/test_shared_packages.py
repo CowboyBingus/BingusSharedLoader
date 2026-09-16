@@ -25,7 +25,9 @@ def resources(path):
               'Consistent Vaulting': 'mods/cowboybingus/consistent_vaulting',
               'Shallow Water Diving': 'mods/cowboybingus/shallow_water_dive',
               'Sentry Aim Retention': 'mods/cowboybingus/sentry_aim_retention',
-              'Enemy Collision Synchronized': 'mods/cowboybingus/corpse_collision_repair'}
+              'Enemy Collision Synchronized': 'mods/cowboybingus/corpse_collision_repair',
+              'Vehicle Stability': 'mods/cowboybingus/vehicle_stability',
+              'Controllable Hover Pack': 'mods/cowboybingus/hover_pack_cancel'}
     assert struct.unpack_from('<III', data) == (0xF0000011, 1, 1)
     result = {}
     for index in range(1):
