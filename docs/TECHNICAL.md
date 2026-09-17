@@ -49,3 +49,11 @@ Resource tests verify distinct ownership across load orders and removal subsets.
 Original game scripts are build inputs supplied by the developer, not source-distribution files. Generated archives, manager fixtures, dependency binaries, caches and history are excluded from the source export. The public artwork retains its visible AI disclosure.
 
 Armory Preview Cache is registered as `mods/cowboybingus/armory_preview_cache`. Its builder does not generate a separate loader variant.
+
+## Shared log directory
+
+Loader v14 (internal marker 15, API 1) provides `CowboyBingusModLoader.open_log(filename)` before loading gameplay modules. It creates `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs` once per session through the Windows directory API. Each mod keeps its existing log filename, including the collision profiler. Only plain `.log` filenames are accepted; paths and traversal are rejected.
+
+The helper returns a writable file or nil. Missing environment variables, unavailable FFI, directory permissions and file-open errors cannot interrupt module discovery. Each caller also isolates its write/close operation. Modules running with an older loader continue their existing gameplay startup but skip logging; install v14 to use the new directory. Configuration and profile files are not logs and retain their existing locations.
+
+The focused logging suite covers existing directories, setup failures, file-open failures and one-time initialization. A native Windows filesystem smoke check also verifies actual directory creation without attaching to the game.

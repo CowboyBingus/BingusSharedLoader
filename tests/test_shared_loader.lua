@@ -70,7 +70,7 @@ for _, audio in ipairs({false, true}) do
             return required(name)
         end
         env.init()
-        assert(env.CowboyBingusModLoader.version == 14 and env.CowboyBingusModLoader.api == 1)
+        assert(env.CowboyBingusModLoader.version == 15 and env.CowboyBingusModLoader.api == 1)
         local previous = env.update
         env.update = function(...)
             hud_updates = hud_updates + 1
