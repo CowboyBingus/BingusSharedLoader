@@ -3,19 +3,21 @@
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v12.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v13.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge / Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-**v12 / API 1** adds the optional Know Your Constellation module and supports Enemy Collision Synchronized as a standalone mod or as part of Vanilla Plus Megapack v7. Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
+**v13 / API 1** adds the optional Armory Preview Cache module and supports Enemy Collision Synchronized as a standalone mod or as part of Vanilla Plus Megapack v10. Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
-**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v12.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
+**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v13.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **v12 / API 1**. Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline startup checks pass, and Know Your Constellation was confirmed working in-game with this loader.
+This is **v13 / API 1**. Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). The preceding loader was confirmed working with Know Your Constellation. This release retains that registration and its API.
 
 ## Supported modules
+
+- Armory Preview Cache, for retained equipment thumbnails, asset preloading and learned startup preparation in Armory and mission briefing.
 
 - Vanilla Plus Megapack, including the CowboyBingus gameplay modules below.
 - Better Stratagem Bounce.

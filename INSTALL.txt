@@ -1,11 +1,11 @@
-Bingus Shared Loader - v12
+Bingus Shared Loader - v13
 
 REQUIRED DEPENDENCY
-Required by Know Your Constellation, Vanilla Plus Megapack or current Better Stratagem Bounce, Hellpod Steering Unlocked,
+Required by Armory Preview Cache, Know Your Constellation, Vanilla Plus Megapack or current Better Stratagem Bounce, Hellpod Steering Unlocked,
 Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving,
 Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Controllable Hover Pack.
 Install with Arsenal or HD2MM: import
-Bingus-Shared-Loader-v12.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v13.zip, enable it alongside your chosen mods, then click Deploy.
 One loader installation supports all your selected mods.
 
 ARSENAL LOAD ORDER
@@ -19,7 +19,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 1. Close Helldivers 2.
 2. Remove or replace the previous Shared Mod Loader / Bingus Shared Loader entry
    in HDArsenal or HD2MM. Use only one manager.
-3. Import Bingus-Shared-Loader-v12.zip and Vanilla-Plus-Megapack-v7.zip or your chosen
+3. Import Bingus-Shared-Loader-v13.zip and Vanilla-Plus-Megapack-v7.zip or your chosen
    current gameplay module ZIPs. Current standalone copies can remain
    installed alongside the megapack. give the pack winning priority over them.
 4. Enable the loader and the gameplay mods, then Purge and Deploy.
@@ -66,3 +66,5 @@ Loader-v11 discovers mods/cowboybingus/hover_pack_cancel. Controllable Hover Pac
 
 Loader v12 adds optional discovery for Know Your Constellation.
 Players without Know Your Constellation receive no new panel or gameplay changes.
+
+Loader v13 adds Armory Preview Cache as an optional module using API 1.

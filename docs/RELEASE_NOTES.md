@@ -1,3 +1,13 @@
+# v13
+
+- Registers Armory Preview Cache as an optional module.
+- Supports Vanilla Plus Megapack v10 and its selectable Armory Preview Cache v16 component.
+- Retains API 1 and the existing loader identity; no gameplay behavior added.
+
+## loader-v13
+
+Adds optional Armory Preview Cache discovery to the normal release registry. API 1, manager GUID, existing modules and original Wwise callbacks are preserved.
+
 ## loader-v12
 
 - Registers Know Your Constellation through its stable internal module identity.
