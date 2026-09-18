@@ -1,5 +1,17 @@
 # Shared startup contract
 
+Loader v15 adds [declared addon discovery](AUTHORING.md) after the legacy
+registry, retaining API 1 and using internal coordinator version 16. The builder
+embeds `src/discover.lua` into the compiled startup chunk. It scans deployed
+patches once, validates bounded Lua envelopes and exact resource-name hashes,
+and respects numeric patch precedence including unmarked overrides. Enumeration
+failure leaves legacy startup available. See [validation coverage](DISCOVERY_VALIDATION.md) for test scope.
+
+Startup arguments and all stock return values are preserved. Stock runtime
+errors propagate without retrying initialization. The loader's own registry,
+logs and manager GUID remain compatible; discovery adds no Wwise replacement
+outside the existing loader package.
+
 Bingus Shared Loader owns one Lua resource: `core/wwise/lua/wwise_flow_callbacks`, hash `0x7251FDD9BB62480A`. It runs the supported original callback bytecode and then the authored coordinator. It does not own `boot` or any gameplay resource.
 
 The coordinator exposes `CowboyBingusModLoader.api == 1`. That internal marker remains unchanged from the former Shared Mod Loader package. Its manager GUID is `612eaf70-d682-43c7-9efd-16dcc695f977`.

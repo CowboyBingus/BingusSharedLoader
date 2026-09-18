@@ -1,12 +1,12 @@
-TEST BUILD: mission-mode and centralized-log corrections. In-game validation pending.
+v15: automatic addon discovery; API 1 and existing mods preserved.
 
-Requires Bingus Shared Loader v14 for the shared log folder.
+Includes the shared log folder for supported mods.
 
 Logs: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs
 
 
 
-Bingus Shared Loader - v14
+Bingus Shared Loader - v15
 
 
 
@@ -20,7 +20,7 @@ Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Contr
 
 Install with Arsenal or HD2MM: import
 
-Bingus-Shared-Loader-v14.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v15.zip, enable it alongside your chosen mods, then click Deploy.
 
 One loader installation supports all your selected mods.
 
@@ -48,7 +48,7 @@ Supported: Steam build 24826606 / EXE 1.8.45317.0.
 
    in HDArsenal or HD2MM. Use only one manager.
 
-3. Import Bingus-Shared-Loader-v14.zip and Vanilla-Plus-Megapack-v10.1.zip or your chosen
+3. Import Bingus-Shared-Loader-v15.zip and Vanilla-Plus-Megapack-v10.1.zip or your chosen
 
    current gameplay module ZIPs. Current standalone copies can remain
 

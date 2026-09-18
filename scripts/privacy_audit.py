@@ -22,6 +22,7 @@ PATTERNS = {
     'credential_token': r'\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|sk-(?:proj-)?[A-Za-z0-9_-]{24,}|AKIA[A-Z0-9]{16})\b',
     'credential_assignment': r"""(?i)\b(?:api_key|password|access_token|client_secret)\s*[:=]\s*["'][^"'\s]{8,}["']""",
     'international_phone': r'(?<![\w.])\+[1-9]\d{9,14}(?![\w.])',
+    'session_capture_id': r'\b\d{8}T\d{6}(?:\.\d+)?Z(?:_[a-f0-9]+)?\b',
     'private_session': r'(?i)\bPID\s*[:=]?\s*\d{2,}\b',
 }
 

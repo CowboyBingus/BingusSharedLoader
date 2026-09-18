@@ -1,3 +1,14 @@
+# v15
+
+Adds startup discovery for plaintext `HD2-Addon` entry resources. Existing mods
+continue through the legacy registry with API 1 unchanged. Includes an author
+packaging helper; see [authoring instructions](AUTHORING.md). The loader still
+owns only Wwise startup, with the same manager GUID and archive sidecars.
+
+Preliminary in-game testing was reported successful. See
+[validation coverage](DISCOVERY_VALIDATION.md) for the scope of offline checks
+and remaining live-game coverage. Building does not automatically deploy or publish.
+
 # v13
 
 - Registers Armory Preview Cache as an optional module.

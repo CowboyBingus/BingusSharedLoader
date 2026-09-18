@@ -1,3 +1,10 @@
+# v15
+
+- Discovers explicitly declared addon entries across author namespaces without registry edits.
+- Preserves API 1, legacy module order, shared logs and manager package identity.
+- Adds a single-script author packaging helper and discovery regression coverage.
+- Includes a minimal example mod and author documentation.
+
 # v14
 
 - Creates one shared folder for all updated CowboyBingus mod logs.

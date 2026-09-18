@@ -1,6 +1,6 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
-state = {version = 15, api = 1, modules = {}}
+state = {version = 16, api = 1, modules = {}}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 -- One directory and one filesystem setup per session for every mod's logs.
@@ -35,7 +35,8 @@ local function report(name, status)
     pcall(function()
         local file = state.open_log('BingusSharedLoader.log')
         if not file then return end
-        file:write('Bingus Shared Loader loader-v14; API 1\n')
+        file:write('Bingus Shared Loader loader-v15; API 1\n')
+        if state.discovery then file:write('Discovery: ' .. state.discovery .. '\n') end
         for module, result in pairs(state.modules) do
             file:write(module .. ': ' .. result .. '\n')
         end
@@ -44,7 +45,7 @@ local function report(name, status)
 end
 
 local application = stingray and stingray.Application
-for _, name in ipairs({
+local names = {
     'mods/cowboybingus/vanilla_plus_megapack',
     'mods/cowboybingus/better_stratagem_bounce',
     'mods/cowboybingus/hellpod_steering_unlocked',
@@ -59,18 +60,49 @@ for _, name in ipairs({
     'mods/cowboybingus/enemy_intelligence',
     'mods/codex/gun_calibration',
     'mods/cowboybingus/armory_preview_cache',
-}) do
-    local ok, available = pcall(function()
-        assert(application and type(application.can_get) == 'function', 'resource lookup unavailable')
-        return application.can_get('lua', name)
-    end)
-    if not ok then
-        report(name, 'lookup failed: ' .. tostring(available))
-    elseif not available then
-        -- Missing resources must never reach the engine's require path.
-        report(name, 'not installed')
+}
+
+-- The builder embeds discovery in this lexical scope. Direct-source legacy tests
+-- can still exercise the coordinator without loading native filesystem APIs.
+if addon_discovery then
+    local ok, entries, warnings = pcall(addon_discovery.discover)
+    if ok then
+        state.discovery = tostring(#entries) .. ' declared entries'
+        local listed = {}
+        for _, name in ipairs(names) do listed[name] = true end
+        for _, name in ipairs(entries) do
+            if not listed[name] then names[#names + 1] = name; listed[name] = true end
+        end
+        if warnings and #warnings > 0 then
+            state.discovery = state.discovery .. '; ' .. table.concat(warnings, '; ')
+        end
     else
-        local loaded, reason = pcall(require, name)
-        report(name, loaded and 'loaded' or 'load failed: ' .. tostring(reason))
+        state.discovery = 'failed: ' .. tostring(entries)
+    end
+    print('[BingusSharedLoader] Discovery: ' .. state.discovery)
+end
+
+for _, name in ipairs(names) do
+    local other = rawget(_G, 'HD2ModLoader')
+    local other_status = other and other.modules and other.modules[name]
+    if state.modules[name] then
+        -- A previous initialization attempt (including failure) is never retried.
+    elseif other_status == 'loaded' or other_status == 'loading' then
+        report(name, other_status)
+    else
+        local ok, available = pcall(function()
+            assert(application and type(application.can_get) == 'function', 'resource lookup unavailable')
+            return application.can_get('lua', name)
+        end)
+        if not ok then
+            report(name, 'lookup failed: ' .. tostring(available))
+        elseif not available then
+            -- Missing resources must never reach the engine's require path.
+            report(name, 'not installed')
+        else
+            state.modules[name] = 'loading'
+            local loaded, reason = pcall(require, name)
+            report(name, loaded and 'loaded' or 'load failed: ' .. tostring(reason))
+        end
     end
 end

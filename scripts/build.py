@@ -25,6 +25,19 @@ def run(args, **kwargs):
     return result.stdout
 
 
+def bootstrap(stock_bytes):
+    literal = '"' + ''.join(f'\\{byte:03d}' for byte in stock_bytes) + '"'
+    discovery = (ROOT / 'src/discover.lua').read_text(encoding='utf-8')
+    coordinator = (ROOT / 'src/shared_loader.lua').read_text(encoding='utf-8')
+    # Preserve startup arguments and all results, including trailing nils. A stock
+    # runtime error propagates: native initialization must never be retried.
+    return ('local function initialize_addons()\n'
+            'local addon_discovery = (function()\n' + discovery + '\nend)()\n'
+            + coordinator + '\nend\n'
+            'return (function(...) initialize_addons(); return ... end)'
+            f'(assert(loadstring({literal}, "@vanilla_wwise_callbacks"))(...))\n')
+
+
 def main():
     BUILD.mkdir(exist_ok=True)
     boot = BOOT.read_bytes()
@@ -37,9 +50,7 @@ def main():
     (BUILD / 'vanilla-boot.ljbc').write_bytes(boot[8:])
     (BUILD / 'vanilla-callbacks.ljbc').write_bytes(callback[8:])
     (BUILD / 'vanilla-callbacks.lua.main').write_bytes(callback)
-    literal = '"' + ''.join(f'\\{byte:03d}' for byte in callback[8:]) + '"'
-    wrapper = f"assert(loadstring({literal}, '@vanilla_wwise_callbacks'))()\n"
-    wrapper += (ROOT / 'src/shared_loader.lua').read_text(encoding='utf-8')
+    wrapper = bootstrap(callback[8:])
     source = BUILD / 'callbacks.wrapper.lua'
     source.write_text(wrapper, encoding='utf-8', newline='\n')
     env = dict(os.environ, LUA_PATH=str(LUA.parent / '?.lua') + ';;')
@@ -51,6 +62,9 @@ def main():
     (BUILD / 'callbacks.lua.main').write_bytes(resource)
     tests = run([LUA, ROOT / 'tests/test_shared_loader.lua', ROOT / 'src', BUILD], env=env)
     tests += run([LUA, ROOT / 'tests/test_logging.lua', ROOT / 'src'], env=env)
+    tests += run([LUA, ROOT / 'tests/test_discovery.lua', ROOT / 'src'], env=env)
+    tests += run([sys.executable, ROOT / 'tests/test_addon_package.py'], env=env)
+    tests += run([sys.executable, ROOT / 'tests/test_discovery_integration.py'], env=env)
     (BUILD / 'offline-tests.txt').write_text(tests, encoding='utf-8')
     (BUILD / ARCHIVE).write_bytes(make_archive({resource_hash(CALLBACK_PATH): resource}))
     for suffix in ('.stream', '.gpu_resources'):
@@ -59,9 +73,9 @@ def main():
              for suffix in ('', '.stream', '.gpu_resources')}
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
-        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v14',
+        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v15',
         'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods. Import this ZIP through Arsenal or HD2MM, enable it alongside the megapack or your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
-        'provides': {'shared_loader_api': 1},
+        'provides': {'shared_loader_api': 1, 'addon_discovery': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},
         'original_callbacks_sha256': CALLBACK_SHA, 'boot_replaced': False,
@@ -73,6 +87,7 @@ def main():
         for p in (ROOT / folder).glob(glob)}
     release = package_release(ROOT, BUILD, report)
     tests += run([sys.executable, ROOT / 'tests/test_package.py', release])
+    report['offline_tests'] = tests.strip()
     report['release'] = {'path': Path(os.path.relpath(release, ROOT)).as_posix(), 'sha256': sha(release.read_bytes())}
     (BUILD / 'build-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(tests.strip())
