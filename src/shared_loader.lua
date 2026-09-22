@@ -35,7 +35,7 @@ local function report(name, status)
     pcall(function()
         local file = state.open_log('BingusSharedLoader.log')
         if not file then return end
-        file:write('Bingus Shared Loader loader-v15; API 1\n')
+        file:write('Bingus Shared Loader loader-v16; API 1\n')
         if state.discovery then file:write('Discovery: ' .. state.discovery .. '\n') end
         for module, result in pairs(state.modules) do
             file:write(module .. ': ' .. result .. '\n')

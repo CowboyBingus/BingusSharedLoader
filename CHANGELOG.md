@@ -1,3 +1,8 @@
+# v16
+
+- Update compatibility for game build 25327279.
+- Keep existing addon discovery, shared logs and audio callbacks working.
+
 # v15
 
 - Discovers explicitly declared addon entries across author namespaces without registry edits.
