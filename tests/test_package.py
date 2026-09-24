@@ -16,13 +16,13 @@ with zipfile.ZipFile(sys.argv[1]) as package:
     expected |= {'BingusSharedLoader-README.txt', 'BingusSharedLoader-manifest.json', 'manifest.json', 'thumbnail.png'}
     assert len(names) == len(expected) and set(names) == expected
     manager = json.loads(package.read('manifest.json'))
-    assert manager['Version'] == 1 and manager['Name'] == 'Bingus Shared Loader - v16'
+    assert manager['Version'] == 1 and manager['Name'] == 'Bingus Shared Loader - v17'
     assert len(manager['Options']) == 1 and manager['Options'][0]['Include'] == ['data']
     assert manager['Guid'] == '612eaf70-d682-43c7-9efd-16dcc695f977'
     assert manager['IconPath'] == manager['Options'][0]['Image'] == 'thumbnail.png'
     assert package.read('thumbnail.png').startswith(b'\x89PNG\r\n\x1a\n')
     report = json.loads(package.read('BingusSharedLoader-manifest.json'))
-    assert report['revision'] == 'loader-v16' and report['provides'] == {'shared_loader_api': 1, 'addon_discovery': 1}
+    assert report['revision'] == 'loader-v17' and report['provides'] == {'shared_loader_api': 1, 'addon_discovery': 1}
     assert report['runtime_verified'] is False, 'Changed runtime must not inherit an old validation claim'
     for name, expected_hash in report['files'].items():
         assert hashlib.sha256(package.read(name)).hexdigest().upper() == expected_hash

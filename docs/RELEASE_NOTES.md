@@ -1,2 +1,3 @@
-- Update compatibility for game build 25327279.
-- Keep existing addon discovery, shared logs and audio callbacks working.
+- Support Steam build 25480438 with updated game-module fingerprints.
+- Preserve API 1, addon discovery and the original audio callbacks.
+- Offline builds and package checks pass; live gameplay validation remains pending.

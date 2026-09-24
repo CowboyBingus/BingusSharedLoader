@@ -1,19 +1,21 @@
+> Current local compatibility candidate for Steam build 25480438 / EXE 1.8.46015.0. Offline checks passed; live gameplay verification is pending.
+
 ![Bingus Shared Loader](assets/banner.png)
 
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v16.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v17.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge / Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-**v16 / API 1** adds automatic discovery for declared addon entries and retains all existing module registrations and shared logging. Preliminary in-game testing was reported successful; see [validation coverage](docs/DISCOVERY_VALIDATION.md). See [mod author instructions](docs/AUTHORING.md). Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
+**v17 / API 1** adds automatic discovery for declared addon entries and retains all existing module registrations and shared logging. Preliminary in-game testing was reported successful; see [validation coverage](docs/DISCOVERY_VALIDATION.md). See [mod author instructions](docs/AUTHORING.md). Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
-**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v16.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
+**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v17.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **v16 / API 1**. Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). The preceding loader was confirmed working with Know Your Constellation. This release retains that registration and its API.
+This is **v17 / API 1**. Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged, so existing module-only gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). The preceding loader was confirmed working with Know Your Constellation. This release retains that registration and its API.
 
 ## Supported modules
 
@@ -45,7 +47,7 @@ The overlay keeps its own configuration and defaults. Its optional `HUDBTO.ini` 
 
 The maintainer confirmed v3 works in-game with the v2 overlay linked in [technical notes](docs/TECHNICAL.md). Offline checks also cover startup, configuration reads and callback forwarding with HUD+ and the gameplay modules. Future releases need revalidation if their startup changes. Other startup replacements can still conflict. this loader does not merge arbitrary scripts.
 
-Supported: Steam build **25327279** / EXE **1.8.45850.0**. Callback preservation, missing-module behavior and manager deployment are checked independently of each gameplay mod's behavior.
+Supported: Steam build **25480438** / EXE **1.8.46015.0**. Callback preservation, missing-module behavior and manager deployment are checked independently of each gameplay mod's behavior.
 
 Loader v14 creates `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs` for its own log and all updated CowboyBingus mod logs. Each mod retains its existing filename.
 
@@ -60,4 +62,4 @@ Loader v14 creates `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs` for its own lo
 
 **AI disclosure:** GPT-6 Astra assisted with research, implementation, debugging, documentation and artwork.
 
-Current version: **v16**, for game build **25327279**. See [changes](CHANGELOG.md) and [validation coverage](docs/MIGRATION_VALIDATION.md).
+Current version: **v17**, for game build **25480438**. See [changes](CHANGELOG.md) and [validation coverage](docs/MIGRATION_VALIDATION.md).

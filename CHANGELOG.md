@@ -1,3 +1,9 @@
+# v17
+
+- Support Steam build 25480438 with updated game-module fingerprints.
+- Preserve API 1, addon discovery and the original audio callbacks.
+- Offline builds and package checks pass; live gameplay validation remains pending.
+
 # v16
 
 - Update compatibility for game build 25327279.
