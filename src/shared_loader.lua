@@ -1,6 +1,6 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
-state = {version = 16, api = 1, modules = {}}
+state = {version = 17, api = 1, modules = {}}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 -- One directory and one filesystem setup per session for every mod's logs.
@@ -29,19 +29,38 @@ function state.open_log(name)
     if ok then return file end
 end
 
-local function report(name, status)
-    state.modules[name] = status
-    print('[BingusSharedLoader] ' .. name .. ': ' .. status)
+local jit_cache
+local function write_log()
     pcall(function()
         local file = state.open_log('BingusSharedLoader.log')
         if not file then return end
-        file:write('Bingus Shared Loader loader-v17; API 1\n')
+        file:write('Bingus Shared Loader loader-v18; API 1\n')
         if state.discovery then file:write('Discovery: ' .. state.discovery .. '\n') end
+        if jit_cache then file:write(jit_cache.describe() .. '\n') end
         for module, result in pairs(state.modules) do
             file:write(module .. ': ' .. result .. '\n')
         end
         file:close()
     end)
+end
+
+local function report(name, status)
+    state.modules[name] = status
+    print('[BingusSharedLoader] ' .. name .. ': ' .. status)
+    write_log()
+end
+
+-- The builder embeds src/jit_budget.lua in this lexical scope. The game's
+-- LuaJIT code cache is shared by every mod, so its limits are raised before
+-- any mod starts. state.jit also tells older fallbacks the loader manages it.
+if jit_budget then
+    local ok, cache = pcall(jit_budget.start, rawget(_G, 'jit'), {log = write_log})
+    if ok then
+        jit_cache, state.jit = cache, cache.public
+        print('[BingusSharedLoader] ' .. cache.describe())
+    else
+        state.jit = {managed = false, reason = tostring(cache)}
+    end
 end
 
 local application = stingray and stingray.Application

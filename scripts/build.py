@@ -28,11 +28,13 @@ def run(args, **kwargs):
 def bootstrap(stock_bytes):
     literal = '"' + ''.join(f'\\{byte:03d}' for byte in stock_bytes) + '"'
     discovery = (ROOT / 'src/discover.lua').read_text(encoding='utf-8')
+    budget = (ROOT / 'src/jit_budget.lua').read_text(encoding='utf-8')
     coordinator = (ROOT / 'src/shared_loader.lua').read_text(encoding='utf-8')
     # Preserve startup arguments and all results, including trailing nils. A stock
     # runtime error propagates: native initialization must never be retried.
     return ('local function initialize_addons()\n'
             'local addon_discovery = (function()\n' + discovery + '\nend)()\n'
+            'local jit_budget = (function()\n' + budget + '\nend)()\n'
             + coordinator + '\nend\n'
             'return (function(...) initialize_addons(); return ... end)'
             f'(assert(loadstring({literal}, "@vanilla_wwise_callbacks"))(...))\n')
@@ -63,6 +65,9 @@ def main():
     tests = run([LUA, ROOT / 'tests/test_shared_loader.lua', ROOT / 'src', BUILD], env=env)
     tests += run([LUA, ROOT / 'tests/test_logging.lua', ROOT / 'src'], env=env)
     tests += run([LUA, ROOT / 'tests/test_discovery.lua', ROOT / 'src'], env=env)
+    tests += run([LUA, ROOT / 'tests/test_jit_budget.lua', ROOT / 'src'], env=env)
+    # The installed game's own LuaJIT 2.1.0-alpha, in this process only; skipped without the game.
+    tests += run([sys.executable, ROOT / 'tests/test_jit_budget_game.py', ROOT / 'src'], env=env)
     tests += run([sys.executable, ROOT / 'tests/test_addon_package.py'], env=env)
     tests += run([sys.executable, ROOT / 'tests/test_discovery_integration.py'], env=env)
     (BUILD / 'offline-tests.txt').write_text(tests, encoding='utf-8')
@@ -73,7 +78,7 @@ def main():
              for suffix in ('', '.stream', '.gpu_resources')}
     report = {
         'name': 'Bingus Shared Loader', 'slug': 'BingusSharedLoader',
-        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v17',
+        'guid': '612eaf70-d682-43c7-9efd-16dcc695f977', 'revision': 'loader-v18',
         'description': 'ARSENAL: place this loader LAST (bottom of the list) with default priority, or FIRST if first-mod priority is enabled. Required by Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods. Import this ZIP through Arsenal or HD2MM, enable it alongside the megapack or your chosen mods, then Deploy. Also supports HUD Ballistic Trajectory Overlay v2.',
         'provides': {'shared_loader_api': 1, 'addon_discovery': 1},
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,

@@ -27,7 +27,7 @@ local function run(kind)
         return {cdef=function()end,load=function(name)assert(name=='kernel32');return kernel end}
     end},{__index=_G});env._G=env
     setfenv(assert(loadfile(source..'/shared_loader.lua')),env)()
-    local state=env.CowboyBingusModLoader;assert(state.version==16 and state.api==1)
+    local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1)
     local modules=0;for _,status in pairs(state.modules)do assert(status=='not installed');modules=modules+1 end
     assert(modules==14,'Logging failure interrupted mod discovery')
     local before=#directories

@@ -69,3 +69,44 @@ Loader v14 (internal marker 15, API 1) provides `CowboyBingusModLoader.open_log(
 The helper returns a writable file or nil. Missing environment variables, unavailable FFI, directory permissions and file-open errors cannot interrupt module discovery. Each caller also isolates its write/close operation. Modules running with an older loader continue their existing gameplay startup but skip logging; install v14 to use the new directory. Configuration and profile files are not logs and retain their existing locations.
 
 The focused logging suite covers existing directories, setup failures, file-open failures and one-time initialization. A native Windows filesystem smoke check also verifies actual directory creation without attaching to the game.
+
+## Shared LuaJIT code cache (v18)
+
+The game's `bin/lua51.dll` is LuaJIT 2.1.0-alpha (non-GC64) with its default
+limits: `maxmcode=512` KB of machine code and `maxtrace=1000` traces, read from
+the live `jit_State`. The game never raises them, and the game and every addon
+share them. On the ship, about 320 traces and 200 KB of machine code were
+live, about 94% of it from mods. When a new trace would exceed either limit,
+LuaJIT calls `lj_trace_flushall`: every compiled trace is discarded and
+recompiled as code runs hot again, with the code interpreted in between.
+
+`src/jit_budget.lua` is embedded in the startup chunk like discovery. Before
+any module loads, it calls `jit.opt.start('maxmcode=16384', 'maxtrace=8000')`
+and attaches one `jit.attach(handler, 'trace')` watcher. The watcher counts
+compiled traces. After a flush it doubles both limits up to 64 MB and 16,000
+traces; the trace limit only grows while `collectgarbage('count')` is below
+24 MB. Machine code is placed within the jump range of `lua51.dll`, where 1.86
+GB of address space was free. Each trace also keeps about 1 KB of records in
+the Lua heap, which a non-GC64 LuaJIT must place below 2 GB, where about 48 MB
+was free; hence the heap guard.
+
+Cost: nothing per frame and no update hook. The handler runs only on trace
+events. A flush adds one `jit.opt.start` call and at most one log rewrite per
+30 seconds, plus one per growth step. The log gets one line, for example
+`LuaJIT cache: expanded 16384 KB / 8000 traces; flushes 0, growth 0; watcher on`.
+`CowboyBingusModLoader.jit` exposes the same state; Vanilla Plus Megapack v31
+uses its presence to leave the cache to the loader. The raised limits are always
+on; there is no switch back to the game's own limits.
+
+In recorded real play with every Vanilla Plus Megapack mod enabled (19 minutes
+aboard the ship and an 11-minute mission), machine code reached the old 512 KB
+aboard the ship and 960 KB in 946 traces by the end, with no flush. The Lua heap
+peaked at 3.9 MB, well below the 24 MB guard.
+
+`tests/test_jit_budget.lua` covers limits, growth, ceilings, the heap guard,
+the log interval and failures with a stand-in `jit` table.
+`tests/test_jit_budget_game.py` runs `tests/test_jit_budget_game.lua` inside
+the installed game's own `lua51.dll`, in the test process only. There, real
+overflows of a deliberately tiny cache flush, the watcher grows the limits, and
+later code compiles without a flush. The check is skipped when the game is not
+installed.

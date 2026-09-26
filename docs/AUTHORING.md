@@ -73,8 +73,8 @@ addons. There is no automatic retry, hot reload or dependency ordering. Require
 your dependencies explicitly and keep your initialization guarded if other code
 can start it. Do not depend on discovery order between unrelated mods.
 
-`CowboyBingusModLoader.api` remains exactly `1`; the internal version is `16`
-for release v15. Existing globals, module statuses and `open_log` remain.
+`CowboyBingusModLoader.api` remains exactly `1`; the internal version is `17`
+for release v18 (`16` for releases v15 to v17). Existing globals, module statuses and `open_log` remain.
 `HD2ModLoader` entries already marked `loaded` or `loading` are respected without
 merging the two state tables. In-progress entries remain `loading`.
 
@@ -86,3 +86,18 @@ archive contents; the game's availability check and `require` load the winner.
 Manager resource-conflict handling is unchanged. Discovery does not detect
 gameplay incompatibilities, authenticate authors or sandbox addon code. Test
 your callbacks alongside other mods and document known incompatibilities.
+
+## Shared LuaJIT code cache
+
+Every addon runs in the game's single LuaJIT 2.1.0-alpha VM, so they all share
+one code cache. Loader v18 raises its limits before any addon starts and
+reports its state in `CowboyBingusModLoader.jit` (`managed`, `expanded`,
+`mcode_kb`, `traces`, `flushes`, `growths`, `watcher`). Please:
+
+- Do not call `jit.opt.start` with lower `maxmcode` or `maxtrace` values, or
+  `jit.flush()`: a flush discards the compiled code of the game and every mod.
+- Do not attach a `trace` handler with `jit.attach`. LuaJIT keeps one handler
+  per event, so yours would replace the loader's watcher.
+- Keep per-frame code lean and free of new closures and errors used for
+  control flow: code that cannot compile runs slower, and code that compiles
+  into many traces fills the shared cache for everyone.

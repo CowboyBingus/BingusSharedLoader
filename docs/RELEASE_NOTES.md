@@ -1,3 +1,5 @@
-- Support Steam build 25480438 with updated game-module fingerprints.
-- Preserve API 1, addon discovery and the original audio callbacks.
-- Offline builds and package checks pass; live gameplay validation remains pending.
+- Raise the game's shared LuaJIT code cache before any mod starts: 16 MB of machine code and 8,000 traces instead of the game's 512 KB and 1,000, shared by the game and every mod. Filling either limit made LuaJIT discard all compiled code at once and recompile it during play.
+- If a flush still happens, double both limits, up to 64 MB and 16,000 traces; the trace limit only grows while the Lua heap is under 24 MB.
+- Measured in recorded real play with every Vanilla Plus Megapack mod enabled (19 minutes aboard the ship and an 11-minute mission): the old 512 KB was already full aboard the ship, the session ended at 960 KB of machine code in 946 traces, and the cache never flushed.
+- The loader log shows one "LuaJIT cache" line with the limits, flushes and growth steps; mods can read the same state from `CowboyBingusModLoader.jit`.
+- Required update for every CowboyBingus mod: replace the previous loader entry, then Purge / Deploy. No per-frame work and no gameplay change; API 1, addon discovery and the original audio callbacks are unchanged. This removes repeated recompilation, not a promised frame-rate change, which depends on the machine.

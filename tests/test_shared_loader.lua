@@ -70,7 +70,7 @@ for _, audio in ipairs({false, true}) do
             return required(name)
         end
         env.init()
-        assert(env.CowboyBingusModLoader.version == 16 and env.CowboyBingusModLoader.api == 1)
+        assert(env.CowboyBingusModLoader.version == 17 and env.CowboyBingusModLoader.api == 1)
         local previous = env.update
         env.update = function(...)
             hud_updates = hud_updates + 1
@@ -102,4 +102,34 @@ end
 local env = environment(false)
 execute(source .. '/shared_loader.lua', env)
 assert(env.CowboyBingusModLoader.modules[names[1]]:find('lookup failed', 1, true))
-print('PASS: shared coordinator covers all 16384 mod combinations, lookup/module failure isolation, duplicate loads, update returns and original audio callbacks')
+
+-- The built coordinator raises the shared LuaJIT limits before any mod loads
+-- and adds no per-frame hook. The other runs above have no raw jit global:
+-- unmanaged.
+do
+    local env, events = environment(false), {}
+    rawset(env, 'jit', {opt = {start = function(...) events[#events + 1] = 'limits ' .. table.concat({...}, ' ') end},
+                        attach = function(_, event) events[#events + 1] = 'watch ' .. event end})
+    execute(build .. '/vanilla-boot.ljbc', env)
+    local update = function() end
+    env.update = update
+    env.stingray.Application.can_get = function(kind, name) return kind == 'lua' and name == names[9] end
+    env.require = function(name)
+        if name == 'core/wwise/lua/wwise_flow_callbacks' then
+            execute(build .. '/callbacks.ljbc', env)
+            return true
+        elseif name == names[9] then
+            events[#events + 1] = 'module'
+            return true
+        end
+        assert(name == 'core/wwise/lua/wwise_visualization' or name == 'core/wwise/lua/wwise_bank_reference')
+        return {}
+    end
+    env.init()
+    assert(events[1] == 'limits maxmcode=16384 maxtrace=8000' and events[2] == 'watch trace', events[1])
+    assert(events[3] == 'module' and #events == 3)
+    local jit_state = env.CowboyBingusModLoader.jit
+    assert(jit_state.managed and jit_state.expanded and jit_state.watcher and jit_state.menu == nil)
+    assert(env.update == update, 'The cache budget must not hook update')
+end
+print('PASS: shared coordinator covers all 16384 mod combinations, lookup/module failure isolation, duplicate loads, update returns, original audio callbacks and the shared LuaJIT cache start order')
