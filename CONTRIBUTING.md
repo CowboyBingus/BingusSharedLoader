@@ -13,6 +13,19 @@ python -B scripts/build.py
 
 The result is `releases/Bingus-Shared-Loader-v16.zip` under the base workspace, shared with the gameplay packages. A standalone checkout uses its own base directory. Intermediate files and reports remain in this project's `build/`. The original callback bytecode is wrapped with the authored coordinator. The boot resource is a test fixture and is not placed in the mod archive. The builder does not install mods or launch the game.
 
+## Development-only frame probe build (never published)
+
+`python -B scripts/build.py --probe` builds `Bingus-Shared-Loader-v19-probe4.zip` into `build-probe/`, never into a releases folder. It embeds `src/frame_probe.lua` and inserts its two hooks into the coordinator at build time (`PROBE_HOOKS` in `scripts/build.py`), so the public build's sources and resource are unchanged. It times every mod's update and render and rotates normal, burn, bypass and without-ECS arms in 10 s blocks (frame probe schema 4) for the real-play study in PerformanceBaseline. Its revision is `loader-v19-probe4`, its loader log's second line names the probe, `runtime_verified` is always false, and `tests/test_package.py` and `scripts/privacy_audit.py` refuse it as a release. Never publish it.
+
+## Marking a played build
+
+The build report's `runtime_verified` is true only for the loader resource pinned in `TESTED_CALLBACK_SHA` (`scripts/build.py`). Pin it only from a played session:
+
+1. Build the release ZIP.
+2. Play it with the TestHarness `packages` condition, for example `smoke --ship` with that ZIP. The run record must hold each package's SHA-256 (`facts.package_sha256`, or `{"name", "sha256"}` entries in `facts.packages`); a record that lists packages by name only is refused.
+3. With the same build inputs set, run `python -B scripts/pin_tested.py <run folder or run.json> <loader ZIP>`. It pins only when the run was clean (it reached the ship, quit through the engine with exit code 0, left no crash dump and restored the install, on the supported game build), the record holds the ZIP's SHA-256, the run's loader log comes from this revision, and the ZIP's resource is the one the current sources build. Otherwise it lists every reason and writes nothing. Add `--check` to only report.
+4. Rebuild: the report now says `runtime_verified: true`. Commit `scripts/build.py`.
+
 ## Optional integration checks
 
 The build runs discovery parser tests, author ZIP checks and a compiled

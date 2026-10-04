@@ -126,10 +126,44 @@ do
         return {}
     end
     env.init()
-    assert(events[1] == 'limits maxmcode=16384 maxtrace=8000' and events[2] == 'watch trace', events[1])
+    assert(events[1] == 'limits maxmcode=65536 maxtrace=8000' and events[2] == 'watch trace', events[1])
     assert(events[3] == 'module' and #events == 3)
     local jit_state = env.CowboyBingusModLoader.jit
     assert(jit_state.managed and jit_state.expanded and jit_state.watcher and jit_state.menu == nil)
     assert(env.update == update, 'The cache budget must not hook update')
 end
-print('PASS: shared coordinator covers all 16384 mod combinations, lookup/module failure isolation, duplicate loads, update returns, original audio callbacks and the shared LuaJIT cache start order')
+
+-- Capabilities: what this build supports, for mods to test instead of comparing
+-- version. The built coordinator has them all, the bare source only api, logs and
+-- after_startup.
+-- They say what is supported, not how it went this session (here the cache is
+-- unmanaged and discovery fails). Read-only, and looked up through the metatable.
+do
+    local env = environment(false)
+    execute(build .. '/vanilla-boot.ljbc', env)
+    env.stingray.Application.can_get = function() return false end
+    env.require = function(name)
+        if name == 'core/wwise/lua/wwise_flow_callbacks' then
+            execute(build .. '/callbacks.ljbc', env)
+            return true
+        end
+        assert(name == 'core/wwise/lua/wwise_visualization' or name == 'core/wwise/lua/wwise_bank_reference')
+        return {}
+    end
+    env.init()
+    local loader = env.CowboyBingusModLoader
+    local built = loader.capabilities
+    assert(built.api == 1 and built.logs == true and built.discovery == true and built.jit_budget == true
+        and built.health == true and built.after_startup == true)
+    assert(loader.jit.managed == false and loader.discovery:find('^failed: '), 'status and capability mixed up')
+    assert(not pcall(function() built.health = false end) and built.health == true, 'capabilities writable')
+    assert(not pcall(function() built.extra = true end) and built.extra == nil, 'capabilities extendable')
+    assert(getmetatable(built) == false and not pcall(setmetatable, built, {}), 'capabilities metatable exposed')
+    assert(next(built) == nil, 'capabilities stored as fields')
+    local bare = environment(false)
+    execute(source .. '/shared_loader.lua', bare)
+    local direct = bare.CowboyBingusModLoader.capabilities
+    assert(direct.api == 1 and direct.logs == true and direct.discovery == false and direct.jit_budget == false
+        and direct.health == false and direct.after_startup == true)
+end
+print('PASS: shared coordinator covers all 16384 mod combinations, lookup/module failure isolation, duplicate loads, update returns, original audio callbacks, the shared LuaJIT cache start order and read-only capabilities')

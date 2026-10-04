@@ -7,21 +7,30 @@ for _, logging in ipairs({true, false}) do
     builtin.load = function(library)
         assert(library == 'kernel32')
         local kernel = ffi.load(library)
-        return setmetatable({GetModuleFileNameA = function(_, buffer)
+        -- The loader declares its Windows functions under private bsl_ names.
+        return setmetatable({bsl_GetModuleFileNameA = function(_, buffer)
             local path = base .. '/bin/helldivers2.exe'
             ffi.copy(buffer, path); return #path
-        end, FindFirstFileA = function(pattern, buffer)
+        end, bsl_FindFirstFileA = function(pattern, buffer)
             assert(pattern == base .. '/data/9ba626afa44a3aa3.patch_*')
             scans = scans + 1
-            return kernel.FindFirstFileA(pattern, buffer)
+            return kernel.bsl_FindFirstFileA(pattern, buffer)
         end}, {__index = function(_, key) return kernel[key] end})
     end
     local env = setmetatable({print = function(message)
             if message == 'Hello from Example Mod!' then greetings = greetings + 1 end
         end,
         package = {loaded = {ffi = builtin, bit = bit}, preload = {}},
-        os = {date = function(format) assert(format == '!%Y-%m-%dT%H:%M:%SZ'); return 'TEST-LAUNCH-UTC' end,
-            getenv = function(key) assert(key == 'LOCALAPPDATA'); return logging and base or nil end},
+        -- The loader's health report reads the start time and APPDATA (for the
+        -- game's dump folder); this fixture has no dump folder.
+        os = {date = function(format)
+                if format == '%Y-%m-%d %H:%M:%S' then return 'TEST-START' end
+                assert(format == '!%Y-%m-%dT%H:%M:%SZ'); return 'TEST-LAUNCH-UTC'
+            end,
+            getenv = function(key)
+                if key == 'APPDATA' then return nil end
+                assert(key == 'LOCALAPPDATA'); return logging and base or nil
+            end},
         stingray = {Application = {build = function() return 'release' end,
             can_get = function(kind, resource) assert(kind == 'lua'); return resource == name end}}}, {__index = _G})
     env._G = env
@@ -52,7 +61,9 @@ for _, logging in ipairs({true, false}) do
             local file = assert(io.open(base .. '/CowboyBingus/Helldivers2/Logs/' .. filename, 'rb'))
             local text = file:read('*a'); file:close(); return text
         end
-        assert(read('BingusSharedLoader.log'):find(name .. ': loaded', 1, true))
+        local log = read('BingusSharedLoader.log')
+        assert(log:find(name .. ': loaded', 1, true) and log:find('\nStarted: TEST%-START\r?\n'), log)
+        assert(log:find('\nStartup finished: 1 loaded, 0 failed\r?\n'), log)
     end
 end
 print('PASS: minimal example discovered by packaged loader, one greeting, shared loader status, no gameplay callbacks and no dependency on logging')

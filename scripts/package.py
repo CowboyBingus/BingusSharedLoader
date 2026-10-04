@@ -15,7 +15,7 @@ def release_directory(root: Path) -> Path:
     return base / 'releases'
 
 
-def package_release(root: Path, build: Path, report: dict) -> Path:
+def package_release(root: Path, build: Path, report: dict, directory: Path = None) -> Path:
     files = {}
     for destination, source in report['deployment_files'].items():
         data = (root / source).read_bytes()
@@ -49,7 +49,7 @@ def package_release(root: Path, build: Path, report: dict) -> Path:
     if thumbnail.is_file():
         manager['IconPath'] = option['Image'] = 'thumbnail.png'
     files['manifest.json'] = (json.dumps(manager, indent=2) + '\n').encode()
-    release = release_directory(root) / (release_stem + '.zip')
+    release = (directory or release_directory(root)) / (release_stem + '.zip')
     release.parent.mkdir(exist_ok=True)
     temporary = build / 'release.pending.zip'
     with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

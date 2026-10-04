@@ -39,7 +39,7 @@ do
     assert(s.managed and s.expanded and s.watcher and #jit.calls == 1 and logs.count == 0)
     assert(jit.maxmcode == START.mcode and jit.maxtrace == START.traces)
     assert(s.mcode_kb == START.mcode and s.traces == START.traces and s.flushes == 0 and s.growths == 0)
-    assert(cache.describe():find('expanded 16384 KB / 8000 traces', 1, true), cache.describe())
+    assert(cache.describe():find('expanded 65536 KB / 8000 traces', 1, true), cache.describe())
     -- Compiled traces are counted until a flush; other events cost nothing.
     for _ = 1, 5 do jit.handler('start'); jit.handler('stop') end
     jit.handler('abort'); jit.handler('trace_exit')
@@ -77,4 +77,24 @@ do
     local _, s2 = started({attach_error = true})
     assert(s1.managed and not s1.watcher and s2.managed and not s2.watcher)
 end
-print('PASS: JIT cache limits, flush growth to ceilings, heap guard, log interval and failure isolation')
+-- Watcher check: unknown without a registry, attached while the registry holds
+-- this handler, replaced once another handler takes its place.
+do
+    local cache = started()
+    assert(cache.watching() == nil and cache.describe():find('; watcher on', 1, true))
+    local jit, events = library(), {}
+    local watched = budget.start(jit, {registry = function() return {_VMEVENTS = events} end})
+    events[3] = jit.handler
+    assert(watched.watching() == true and watched.describe():find('; watcher on', 1, true))
+    events[3] = function() end
+    assert(watched.watching() == false and watched.describe():find('; watcher replaced', 1, true))
+    -- An unreadable registry leaves the state unknown and is never an error.
+    for _, broken in ipairs({function() error('registry unavailable') end, function() return 'text' end,
+                             function() return {_VMEVENTS = 5} end}) do
+        local unknown = budget.start(library(), {registry = broken})
+        assert(unknown.watching() == nil and unknown.describe():find('; watcher on', 1, true))
+    end
+    local unattached = budget.start(library({no_attach = true}), {registry = function() return {_VMEVENTS = {}} end})
+    assert(unattached.watching() == false and unattached.describe():find('; watcher off', 1, true))
+end
+print('PASS: JIT cache limits, flush growth to ceilings, heap guard, log interval, watcher check and failure isolation')

@@ -34,6 +34,20 @@ def resource_hash(name):
     return value ^ (value >> 47)
 
 
+def read_resource(data, key):
+    """The bytes (envelope included) of the resource with this key in a patch archive, or None."""
+    magic, types, count = struct.unpack_from('<III', data)
+    if magic != 0xF0000011:
+        raise ValueError('not a patch archive')
+    for index in range(count):
+        entry = struct.unpack_from('<7Q6I', data, 72 + types * 32 + index * 80)
+        if entry[0] == key:
+            if entry[2] + entry[7] > len(data):
+                raise ValueError('truncated patch archive')
+            return data[entry[2]:entry[2] + entry[7]]
+    return None
+
+
 def make_archive(resources):
     if not resources:
         raise ValueError('An archive needs at least one resource')

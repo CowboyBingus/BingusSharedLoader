@@ -1,5 +1,8 @@
-- Raise the game's shared LuaJIT code cache before any mod starts: 16 MB of machine code and 8,000 traces instead of the game's 512 KB and 1,000, shared by the game and every mod. Filling either limit made LuaJIT discard all compiled code at once and recompile it during play.
-- If a flush still happens, double both limits, up to 64 MB and 16,000 traces; the trace limit only grows while the Lua heap is under 24 MB.
-- Measured in recorded real play with every Vanilla Plus Megapack mod enabled (19 minutes aboard the ship and an 11-minute mission): the old 512 KB was already full aboard the ship, the session ended at 960 KB of machine code in 946 traces, and the cache never flushed.
-- The loader log shows one "LuaJIT cache" line with the limits, flushes and growth steps; mods can read the same state from `CowboyBingusModLoader.jit`.
-- Required update for every CowboyBingus mod: replace the previous loader entry, then Purge / Deploy. No per-frame work and no gameplay change; API 1, addon discovery and the original audio callbacks are unchanged. This removes repeated recompilation, not a promised frame-rate change, which depends on the machine.
+- The shared LuaJIT code cache now starts at 64 MB of machine code instead of 16 MB and can grow to 256 MB after a flush; unused space costs nothing.
+- New `after_startup`: a mod can run its setup once after every mod has started, so menu registrations no longer need retries.
+- The loader log now records the game's start, its build, each module's load time and heap growth, how the previous session ended and the newest crash dump's code and offset.
+- Another mod can no longer break loading, logs or discovery by replacing Lua builtins or redeclaring Windows functions: the loader keeps private copies and names.
+- When several archives hold the same mod, the log names the copy the game loads and the hidden ones.
+- Mods can test for loader features with `CowboyBingusModLoader.capabilities`; `version` stays 17, so existing mods see no change.
+- Tested in game: a clean run reached the ship and quit with every Vanilla Plus Megapack v37 option, and two missions of real play showed no cache flush (peak 1,344 KB of machine code).
+- Startup work only: still nothing per frame. Replace the previous loader entry in your mod manager, then Purge / Deploy.

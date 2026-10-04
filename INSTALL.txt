@@ -1,9 +1,10 @@
 Supports Steam build 25480438 / EXE 1.8.46015.0. Tested in recorded real play aboard the ship and in a mission.
 
-v18: raises the game's shared LuaJIT code cache limits before any mod starts
-(16 MB / 8,000 traces, growing to 64 MB / 16,000 after a flush); API 1 and addon
-discovery preserved. The loader log shows a "LuaJIT cache:" line. Required update
-for every CowboyBingus mod: replace the previous loader entry.
+v19: starts the game's shared LuaJIT code cache at 64 MB / 8,000 traces (growing to
+256 MB / 16,000 after a flush), adds after_startup for mods, and writes a fuller
+startup log; API 1 and addon discovery preserved. The loader log shows a "LuaJIT
+cache:" line. Recommended for every CowboyBingus mod (they need v18 or newer):
+replace the previous loader entry.
 
 Includes the shared log folder for supported mods.
 
@@ -11,7 +12,7 @@ Logs: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs
 
 
 
-Bingus Shared Loader - v18
+Bingus Shared Loader - v19
 
 
 
@@ -25,7 +26,7 @@ Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Contr
 
 Install with Arsenal or HD2MM: import
 
-Bingus-Shared-Loader-v18.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v19.zip, enable it alongside your chosen mods, then click Deploy.
 
 One loader installation supports all your selected mods.
 
@@ -53,7 +54,7 @@ Supported: Steam build 25480438 / EXE 1.8.46015.0.
 
    in HDArsenal or HD2MM. Use only one manager.
 
-3. Import Bingus-Shared-Loader-v18.zip and Vanilla-Plus-Megapack-v10.1.zip or your chosen
+3. Import Bingus-Shared-Loader-v19.zip and Vanilla-Plus-Megapack-v37.zip or your chosen
 
    current gameplay module ZIPs. Current standalone copies can remain
 
@@ -129,7 +130,7 @@ To remove it, first disable dependent mods, then disable the loader and Purge/De
 
 
 
-Developed with assistance from GPT-6 Astra.
+Developed with assistance from GPT-6 Astra and Claude Opus 5.5.
 
 
 

@@ -1,0 +1,1109 @@
+{
+ "release": "Bingus-Shared-Loader-v18.zip",
+ "scenarios": {
+  "declares_after": {
+   "addon": {
+    "declared": true,
+    "find_first_file_type": "ctype<void *()>",
+    "untyped_buffer_accepted": true
+   },
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "declares_after",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "discovery_copies": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_addon",
+    "Contract_better_stratagem_bounce",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/contract_author/addon": "loaded",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: 2 declared entries",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed",
+    "[BingusSharedLoader] mods/contract_author/addon: loaded"
+   ],
+   "scenario": "discovery_copies",
+   "state": {
+    "api": 1,
+    "discovery": "2 declared entries",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/contract_author/addon": "loaded",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "discovery_unreadable_copies": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_addon",
+    "Contract_better_stratagem_bounce",
+    "Contract_later",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/contract_author/addon": "loaded",
+     "mods/contract_author/later": "loaded",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: 3 declared entries",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed",
+    "[BingusSharedLoader] mods/contract_author/addon: loaded",
+    "[BingusSharedLoader] mods/contract_author/later: loaded"
+   ],
+   "scenario": "discovery_unreadable_copies",
+   "state": {
+    "api": 1,
+    "discovery": "3 declared entries",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/contract_author/addon": "loaded",
+     "mods/contract_author/later": "loaded",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "first_module_declares": {
+   "addon": {
+    "declared": true
+   },
+   "create_directory_takes_nil": false,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "Contract_vanilla_plus_megapack",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "first_module_declares",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "loaded",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": false,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "mixed": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "Contract_vanilla_plus_megapack",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "load failed: module failure",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "loaded",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: load failed: module failure",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "mixed",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "load failed: module failure",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "loaded",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "no_ffi": {
+   "addon": [],
+   "create_directory_takes_nil": false,
+   "declarations": {
+    "CreateDirectoryA": false,
+    "FindClose": false,
+    "FindFirstFileA": false,
+    "FindNextFileA": false,
+    "GetLastError": false,
+    "GetModuleFileNameA": false,
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: ffi builtin unavailable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "no_ffi",
+   "state": {
+    "api": 1,
+    "discovery": "failed: ffi builtin unavailable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": false,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "no_localappdata": {
+   "addon": [],
+   "create_directory_takes_nil": false,
+   "declarations": {
+    "CreateDirectoryA": false,
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "no_localappdata",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": false,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "no_lookup": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "lookup failed: lookup failure",
+     "mods/cowboybingus/armory_preview_cache": "lookup failed: lookup failure",
+     "mods/cowboybingus/better_stratagem_bounce": "lookup failed: lookup failure",
+     "mods/cowboybingus/consistent_vaulting": "lookup failed: lookup failure",
+     "mods/cowboybingus/corpse_collision_repair": "lookup failed: lookup failure",
+     "mods/cowboybingus/enemy_intelligence": "lookup failed: lookup failure",
+     "mods/cowboybingus/hellpod_steering_unlocked": "lookup failed: lookup failure",
+     "mods/cowboybingus/hover_pack_cancel": "lookup failed: lookup failure",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "lookup failed: lookup failure",
+     "mods/cowboybingus/sentry_aim_retention": "lookup failed: lookup failure",
+     "mods/cowboybingus/shallow_water_dive": "lookup failed: lookup failure",
+     "mods/cowboybingus/vanilla_plus_megapack": "lookup failed: lookup failure",
+     "mods/cowboybingus/vehicle_stability": "lookup failed: lookup failure",
+     "mods/cowboybingus/wide_angle_stratagems": "lookup failed: lookup failure"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/codex/gun_calibration: lookup failed: lookup failure",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: lookup failed: lookup failure"
+   ],
+   "scenario": "no_lookup",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "lookup failed: lookup failure",
+     "mods/cowboybingus/armory_preview_cache": "lookup failed: lookup failure",
+     "mods/cowboybingus/better_stratagem_bounce": "lookup failed: lookup failure",
+     "mods/cowboybingus/consistent_vaulting": "lookup failed: lookup failure",
+     "mods/cowboybingus/corpse_collision_repair": "lookup failed: lookup failure",
+     "mods/cowboybingus/enemy_intelligence": "lookup failed: lookup failure",
+     "mods/cowboybingus/hellpod_steering_unlocked": "lookup failed: lookup failure",
+     "mods/cowboybingus/hover_pack_cancel": "lookup failed: lookup failure",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "lookup failed: lookup failure",
+     "mods/cowboybingus/sentry_aim_retention": "lookup failed: lookup failure",
+     "mods/cowboybingus/shallow_water_dive": "lookup failed: lookup failure",
+     "mods/cowboybingus/vanilla_plus_megapack": "lookup failed: lookup failure",
+     "mods/cowboybingus/vehicle_stability": "lookup failed: lookup failure",
+     "mods/cowboybingus/wide_angle_stratagems": "lookup failed: lookup failure"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "none": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "not installed",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "none",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "not installed",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "other_loader": {
+   "addon": [],
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "loading",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: loading",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "other_loader",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "loading",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  },
+  "uses_loader_declarations": {
+   "addon": {
+    "create_directory": true,
+    "declared_when_loading": {
+     "CreateDirectoryA": "ctype<int ()>",
+     "FindClose": "ctype<int ()>",
+     "FindFirstFileA": "ctype<void *()>",
+     "FindNextFileA": "ctype<int ()>",
+     "GetLastError": "ctype<unsigned int ()>",
+     "GetModuleFileNameA": "ctype<unsigned int ()>",
+     "GetModuleFileNameW": false,
+     "GetModuleHandleA": false,
+     "ReadProcessMemory": false,
+     "VirtualQuery": false
+    },
+    "find_files": true,
+    "get_last_error": true,
+    "module_file_name": true
+   },
+   "create_directory_takes_nil": true,
+   "declarations": {
+    "CreateDirectoryA": "ctype<int ()>",
+    "FindClose": "ctype<int ()>",
+    "FindFirstFileA": "ctype<void *()>",
+    "FindNextFileA": "ctype<int ()>",
+    "GetLastError": "ctype<unsigned int ()>",
+    "GetModuleFileNameA": "ctype<unsigned int ()>",
+    "GetModuleFileNameW": false,
+    "GetModuleHandleA": false,
+    "ReadProcessMemory": false,
+    "VirtualQuery": false
+   },
+   "globals_added": [
+    "Contract_better_stratagem_bounce",
+    "CowboyBingusModLoader",
+    "WwiseFlowCallbacks"
+   ],
+   "init_and_shutdown_kept": true,
+   "log": {
+    "header": true,
+    "statuses": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    }
+   },
+   "prints": [
+    "[BingusSharedLoader] LuaJIT cache: expanded 65536 KB / 8000 traces; flushes 0, growth 0; watcher on",
+    "[BingusSharedLoader] Discovery: failed: unexpected game executable",
+    "[BingusSharedLoader] mods/cowboybingus/vanilla_plus_megapack: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/better_stratagem_bounce: loaded",
+    "[BingusSharedLoader] mods/cowboybingus/hellpod_steering_unlocked: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/wide_angle_stratagems: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/reinforcement_beacon_fix_data: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/consistent_vaulting: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/shallow_water_dive: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/sentry_aim_retention: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/corpse_collision_repair: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/vehicle_stability: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/hover_pack_cancel: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/enemy_intelligence: not installed",
+    "[BingusSharedLoader] mods/codex/gun_calibration: not installed",
+    "[BingusSharedLoader] mods/cowboybingus/armory_preview_cache: not installed"
+   ],
+   "scenario": "uses_loader_declarations",
+   "state": {
+    "api": 1,
+    "discovery": "failed: unexpected game executable",
+    "jit": {
+     "expanded": true,
+     "flushes": 0,
+     "growths": 0,
+     "managed": true,
+     "mcode_kb": 65536,
+     "traces": 8000,
+     "watcher": true
+    },
+    "keys": [
+     "api:number",
+     "discovery:string",
+     "jit:table",
+     "log_directory:string",
+     "modules:table",
+     "open_log:function",
+     "version:number"
+    ],
+    "log_directory": "<temp>/CowboyBingus/Helldivers2/Logs",
+    "modules": {
+     "mods/codex/gun_calibration": "not installed",
+     "mods/cowboybingus/armory_preview_cache": "not installed",
+     "mods/cowboybingus/better_stratagem_bounce": "loaded",
+     "mods/cowboybingus/consistent_vaulting": "not installed",
+     "mods/cowboybingus/corpse_collision_repair": "not installed",
+     "mods/cowboybingus/enemy_intelligence": "not installed",
+     "mods/cowboybingus/hellpod_steering_unlocked": "not installed",
+     "mods/cowboybingus/hover_pack_cancel": "not installed",
+     "mods/cowboybingus/reinforcement_beacon_fix_data": "not installed",
+     "mods/cowboybingus/sentry_aim_retention": "not installed",
+     "mods/cowboybingus/shallow_water_dive": "not installed",
+     "mods/cowboybingus/vanilla_plus_megapack": "not installed",
+     "mods/cowboybingus/vehicle_stability": "not installed",
+     "mods/cowboybingus/wide_angle_stratagems": "not installed"
+    },
+    "open_log_rejects_paths": true,
+    "open_log_valid": true,
+    "version": 17
+   },
+   "update_wrapped_by_loader": false
+  }
+ }
+}

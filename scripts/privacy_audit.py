@@ -112,6 +112,8 @@ def audit(packages=(), history=False):
             expected |= {'data/9ba626afa44a3aa3.patch_0' + s for s in ('', '.stream', '.gpu_resources')}
             assert set(names) == expected
             provenance = json.loads(archive.read(provenance_name))
+            # Probe builds are development-only: never audited as releases.
+            assert re.fullmatch(r'loader-v\d+', provenance['revision']), 'Not a release: ' + provenance['revision']
             for name, digest in provenance['files'].items(): assert sha(archive.read(name)) == digest
             for item in archive.infolist():
                 assert not item.extra and not item.comment and item.date_time == (1980, 1, 1, 0, 0, 0)

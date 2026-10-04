@@ -37,5 +37,12 @@ end
 assert(settled, 'Grown limits should eventually hold new code without a flush')
 assert(s.mcode_kb <= budget.CEILING.mcode and s.traces <= budget.CEILING.traces)
 
+-- The watcher check reads the real registry: attached after start, replaced as
+-- soon as anything else attaches a trace handler.
+local watched = budget.start(jit, {registry = debug.getregistry})
+assert(watched.watching() == true and watched.describe():find('; watcher on', 1, true), watched.describe())
+jit.attach(function() end, 'trace')
+assert(watched.watching() == false and watched.describe():find('; watcher replaced', 1, true), watched.describe())
+
 return string.format('%s: %d flushes, %d growth steps to %d KB / %d traces',
     jit.version, s.flushes, s.growths, s.mcode_kb, s.traces)

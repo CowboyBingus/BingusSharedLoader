@@ -1,7 +1,23 @@
 -- Embedded by build.py; never requires an unverified game resource.
+--
+-- Discovery runs once, while the game starts, and is never compiled (jit.off
+-- below): compiled, its loops would keep machine code that never runs again in
+-- the JIT code cache the game and every mod share. tests/test_discovery.lua
+-- checks this in the workspace LuaJIT and in the game's lua51.dll.
 local discovery = {}
 local family = '9ba626afa44a3aa3'
 local lua_type = '\226\023\209\044\250\141\078\161'
+
+-- The JIT is turned off for the function running this file and every function
+-- defined in it, and for nothing else. This file therefore always runs as a
+-- function of its own (dofile, or the wrapper build.py puts around it). Under
+-- pcall, debug.getinfo level 2 is that function. Both calls are protected:
+-- without the debug library, or in a LuaJIT built without the JIT compiler,
+-- discovery only stays compilable.
+if type(debug) == 'table' and type(jit) == 'table' then
+    local found, info = pcall(debug.getinfo, 2, 'f')
+    if found and type(info) == 'table' then pcall(jit.off, info.func, true) end
+end
 
 local function builtin(name)
     local loaded = package and package.loaded and package.loaded[name]
@@ -65,7 +81,69 @@ local function read_at(file, offset, count)
     return bytes
 end
 
-local function scan_file(file, hash, seen, names, entries)
+-- The Lua resource a table row describes: its key, data offset and length, or
+-- nil for another resource type or invalid bounds. Reads nothing.
+local function lua_row(row, table_end, size)
+    if row:sub(9, 16) ~= lua_type then return nil end
+    local offset, length = offset64(row, 16), u32(row, 56)
+    if not (offset and offset >= table_end and length >= 8 and offset <= size and length <= size - offset) then
+        return nil
+    end
+    return row:sub(1, 8), offset, length
+end
+
+-- The body offset and length behind a valid Lua envelope (body length, then
+-- version 2), or nil.
+local function lua_body(file, offset, length)
+    local envelope = read_at(file, offset, 8)
+    local body_length = u32(envelope, 0)
+    if u32(envelope, 4) ~= 2 or body_length > length - 8 then return nil end
+    return offset + 8, body_length
+end
+
+-- What a Lua body starts with: 'declared' and the name when its declaration
+-- names this very resource, 'compiled' for LuaJIT bytecode, 'undeclared' for
+-- any other source (including a declaration of another name).
+local function body_kind(prefix, key, hash)
+    local name = discovery.declaration(prefix)
+    if name and hash(name) == key then return 'declared', name end
+    if prefix:sub(1, 3) == '\27LJ' then return 'compiled' end
+    return 'undeclared'
+end
+
+-- The first copy of a key, from the highest patch, is the one the game loads:
+-- even an undeclared or compiled one hides the older declarations, so it is
+-- noted before its body is read. A failed read here stops this archive's scan,
+-- as it always has. reader: {file, archive, hash, found}.
+local function scan_first(reader, key, offset, length)
+    local body, body_length = lua_body(reader.file, offset, length)
+    if not body then return end
+    local copy, found = {archive = reader.archive}, reader.found
+    found.copies[key] = {copy}
+    found.keys[#found.keys + 1] = key
+    copy.kind, copy.name = body_kind(read_at(reader.file, body, math.min(body_length, 256)), key, reader.hash)
+    if copy.name then found.entries[#found.entries + 1] = copy.name end
+end
+
+-- What a hidden copy is: its kind and declared name, or false when its
+-- envelope is not a Lua envelope.
+local function hidden_kind(reader, key, offset, length)
+    local body, body_length = lua_body(reader.file, offset, length)
+    if not body then return false end
+    return body_kind(read_at(reader.file, body, math.min(body_length, 256)), key, reader.hash)
+end
+
+-- A copy hidden by a higher one only feeds the copies report, and v18 never
+-- read it. Its reads therefore never stop the scan: a copy that cannot be read
+-- is listed as unreadable, and the scan goes on exactly as without the report.
+local function note_hidden(reader, key, offset, length)
+    local read, kind, name = pcall(hidden_kind, reader, key, offset, length)
+    if read and not kind then return end
+    local list = reader.found.copies[key]
+    list[#list + 1] = {archive = reader.archive, kind = read and kind or 'unreadable', name = read and name or nil}
+end
+
+local function scan_file(file, archive, hash, found)
     local size = assert(file:seek('end'), 'archive size unavailable')
     assert(size >= 72, 'truncated header')
     local header = read_at(file, 0, 72)
@@ -74,58 +152,138 @@ local function scan_file(file, hash, seen, names, entries)
     local table_start = 72 + 32 * types
     local table_end = table_start + 80 * count
     assert(types > 0 and table_end <= size, 'truncated archive tables')
+    local reader = {file = file, archive = archive, hash = hash, found = found}
     for index = 0, count - 1 do
-        local row = read_at(file, table_start + index * 80, 80)
-        if row:sub(9, 16) == lua_type then
-            local key = row:sub(1, 8)
-            local offset, length = offset64(row, 16), u32(row, 56)
-            if not seen[key] and offset and offset >= table_end and length >= 8
-                and offset <= size and length <= size - offset then
-                local envelope = read_at(file, offset, 8)
-                local body_length = u32(envelope, 0)
-                if u32(envelope, 4) == 2 and body_length <= length - 8 then
-                    -- Even an unmarked or mismatched override hides an older declaration.
-                    seen[key] = true
-                    local prefix = read_at(file, offset + 8, math.min(body_length, 256))
-                    local name = discovery.declaration(prefix)
-                    if name and hash(name) == key and not names[name] then
-                        names[name] = true
-                        entries[#entries + 1] = name
-                    end
-                end
-            end
+        -- Every read seeks to an absolute offset, and LuaJIT clears the stream's
+        -- error flag before each read, so a failed hidden-copy read leaves
+        -- nothing behind for the next row.
+        local key, offset, length = lua_row(read_at(file, table_start + index * 80, 80), table_end, size)
+        if key and found.copies[key] then
+            note_hidden(reader, key, offset, length)
+        elseif key then
+            scan_first(reader, key, offset, length)
         end
     end
 end
 
-function discovery.scan(paths, hash, open_file)
+-- Numeric patch order, highest first; the path breaks ties.
+local function higher_patch(a, b)
+    if #a.number ~= #b.number then return #a.number > #b.number end
+    if a.number ~= b.number then return a.number > b.number end
+    return a.path < b.path
+end
+
+-- The deployed patch archives among paths, in the game's priority order.
+local function by_priority(paths)
     local ordered = {}
     for _, path in ipairs(paths) do
         local suffix = path:match('[/\\]?' .. family .. '%.patch_(%d+)$')
         local basename = path:match('([^/\\]+)$')
         if suffix and basename == family .. '.patch_' .. suffix then
             local number = suffix:gsub('^0+', '')
-            ordered[#ordered + 1] = {path = path, number = number}
+            ordered[#ordered + 1] = {path = path, name = basename, number = number}
         end
     end
-    table.sort(ordered, function(a, b)
-        if #a.number ~= #b.number then return #a.number > #b.number end
-        if a.number ~= b.number then return a.number > b.number end
-        return a.path < b.path
-    end)
-    local seen, names, entries, warnings = {}, {}, {}, {}
-    for _, item in ipairs(ordered) do
-        local ok, file, reason = pcall(open_file, item.path, 'rb')
-        if ok and file then
-            local parsed, problem = pcall(scan_file, file, hash, seen, names, entries)
-            local closed, close_result = pcall(file.close, file)
-            if not parsed then warnings[#warnings + 1] = item.path .. ': ' .. tostring(problem) end
-            if not closed or close_result == nil then warnings[#warnings + 1] = item.path .. ': close failed' end
-        else
-            warnings[#warnings + 1] = item.path .. ': ' .. tostring(ok and reason or file)
+    table.sort(ordered, higher_patch)
+    return ordered
+end
+
+-- Scans one archive into found. Warnings name the archive file only.
+local function scan_archive(item, hash, open_file, found)
+    local warnings = found.warnings
+    local ok, file, reason = pcall(open_file, item.path, 'rb')
+    if not (ok and file) then
+        -- io.open's reason starts with the full path; keep only the cause.
+        local cause = tostring(ok and reason or file):match('([^:]*)$'):gsub('^%s+', '')
+        warnings[#warnings + 1] = item.name .. ': cannot open (' .. cause .. ')'
+        return
+    end
+    local parsed, problem = pcall(scan_file, file, item.name, hash, found)
+    local closed, close_result = pcall(file.close, file)
+    if not parsed then warnings[#warnings + 1] = item.name .. ': ' .. tostring(problem) end
+    if not closed or close_result == nil then warnings[#warnings + 1] = item.name .. ': close failed' end
+end
+
+local function copy_label(copy)
+    return copy.archive .. ' (' .. (copy.kind or 'unreadable') .. ')'
+end
+
+-- Archives named per log line; the rest are counted. A pack that carries its
+-- own entry in every option repeats that entry once per enabled option.
+discovery.SHOWN = 6
+
+-- The first SHOWN items, then how many more.
+local function shown(items)
+    local text = table.concat(items, ', ', 1, math.min(#items, discovery.SHOWN))
+    if #items > discovery.SHOWN then text = text .. ' (+' .. (#items - discovery.SHOWN) .. ' more)' end
+    return text
+end
+
+-- '<archive> (<kind>) used; hidden: <archive> (<kind>), ...', highest patch first.
+local function copies_text(list)
+    local hidden = {}
+    for index = 2, #list do hidden[#hidden + 1] = copy_label(list[index]) end
+    return copy_label(list[1]) .. ' used; hidden: ' .. shown(hidden)
+end
+
+-- The name the hidden copies declare and the archives holding them, or nil.
+local function hidden_declaration(list)
+    local name, archives = nil, {}
+    for index = 2, #list do
+        local copy = list[index]
+        if copy.name then
+            name = copy.name
+            archives[#archives + 1] = copy.archive
         end
     end
-    return entries, warnings
+    return name, archives
+end
+
+-- Registry names by key, hashed only once an archive repeats a resource.
+local function registry_keys(registry, hash)
+    local keys = {}
+    for _, name in ipairs(registry) do keys[hash(name)] = name end
+    return keys
+end
+
+-- One resource found in more than one archive. started: the name the loader
+-- starts it under (its declared entry or a registry name), or nil.
+local function describe(list, started, copies)
+    local declared, archives = hidden_declaration(list)
+    if started then
+        copies.by_name[started] = copies_text(list)
+    elseif declared then
+        copies.notes[#copies.notes + 1] = 'not started: ' .. declared .. ', declared in ' .. shown(archives)
+            .. ', is hidden by ' .. copy_label(list[1])
+    end
+end
+
+-- Log text for the Lua resources found in more than one archive: by_name, for
+-- each started name, which copy the game loads and which are hidden; notes, a
+-- line for each declared entry that is not started because the copy the game
+-- loads is compiled or undeclared.
+local function describe_copies(found, hash, registry)
+    local copies, listed = {by_name = {}, notes = {}}, nil
+    for _, key in ipairs(found.keys) do
+        local list = found.copies[key]
+        if #list > 1 then
+            listed = listed or registry_keys(registry, hash)
+            describe(list, list[1].name or listed[key], copies)
+        end
+    end
+    return copies
+end
+
+-- entries: the declared names to start, highest patch first. warnings: archive
+-- problems. copies: describe_copies' text. registry: the names the loader
+-- starts besides the declared entries.
+function discovery.scan(paths, hash, open_file, registry)
+    local found = {entries = {}, warnings = {}, copies = {}, keys = {}}
+    for _, item in ipairs(by_priority(paths)) do scan_archive(item, hash, open_file, found) end
+    -- A diagnostic: if it fails, the entries still start.
+    local described, copies = pcall(describe_copies, found, hash, registry or {})
+    if not described then copies = {by_name = {}, notes = {'copies unavailable (' .. tostring(copies) .. ')'}} end
+    return found.entries, found.warnings, copies
 end
 
 function discovery.archive_prefix(executable)
@@ -167,21 +325,18 @@ function discovery.enumerate(ffi, kernel, prefix)
     return paths
 end
 
-function discovery.discover()
-    local ffi, bit = builtin('ffi'), builtin('bit')
-    ffi.cdef [[
-        uint32_t GetModuleFileNameA(void *module, char *filename, uint32_t size);
-        void *FindFirstFileA(const char *pattern, void *data);
-        int FindNextFileA(void *handle, void *data);
-        int FindClose(void *handle);
-        uint32_t GetLastError(void);
-    ]]
-    local kernel = ffi.load('kernel32')
+-- ffi and kernel come from the loader, which declares the Windows functions
+-- once under private names and passes them here under their Windows names.
+-- registry: the loader's own module names (see scan).
+function discovery.discover(ffi, kernel, registry)
+    if not (ffi and kernel) then error('Windows functions unavailable', 0) end
+    local bit = builtin('bit')
     local buffer = ffi.new('char[32768]')
     local length = kernel.GetModuleFileNameA(nil, buffer, 32768)
     assert(length > 0 and length < 32768, 'game executable path unavailable or truncated')
     local prefix = discovery.archive_prefix(ffi.string(buffer, length))
-    return discovery.scan(discovery.enumerate(ffi, kernel, prefix), discovery.hasher(ffi, bit), io.open)
+    return discovery.scan(discovery.enumerate(ffi, kernel, prefix), discovery.hasher(ffi, bit), io.open,
+        registry)
 end
 
 return discovery
