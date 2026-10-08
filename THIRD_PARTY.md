@@ -7,3 +7,8 @@ The loader embeds the supported game's original Wwise callbacks in its generated
 Optional integration tests use locally supplied HDArsenal, HD2MM, HUD+ and HUD Ballistic Trajectory Overlay fixtures. Those applications and mod resources are not bundled with this source project. Overlay compatibility calls the separately installed module. its implementation and configuration are not included in the loader ZIP. This repository is licensed under the Zero-Clause BSD license (0BSD, see `LICENSE`): use, copy, modify and distribute it for any purpose, with no conditions. Upstream dependencies keep their own licenses.
 
 Artwork was generated with GPT-6 Astra assistance using the existing mod artwork as style references, and includes a visible AI disclosure.
+
+The optional throwable launch service uses code / research from
+[HD2Runtime by SkyeShade](https://github.com/SkyeShade/HD2Runtime) for live entity
+and unit layouts. Its implementation is supplied separately from the standard
+loader archive.

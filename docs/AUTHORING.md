@@ -60,6 +60,38 @@ Your archive builder must include both resources. The single-script helper does
 not collect dependencies. Do not also ship a Wwise or boot replacement just to
 start your addon. A ZIP directory named `mods/...` alone is not a game resource.
 
+## Optional throwable launch service
+
+`src/throwable_launch.lua` can be packaged as the unmarked Lua resource
+`mods/cowboybingus/throwable_launch` and explicitly required by a gameplay addon.
+It is not included or started by the standard loader build. The addon owns its
+service instance and calls it from its normal Lua update:
+
+```lua
+local helper = require('mods/cowboybingus/throwable_launch')
+local service = helper.new(reader, game_base, executable_base)
+local supported, reason = service.prove()
+assert(supported, reason)
+service.step(launcher_hashes, grenade_hashes)
+-- Call service.step(launcher_hashes, grenade_hashes) on subsequent updates.
+```
+
+`reader.read(address, size)` must return exactly that many bytes or nil. Module
+bases are numeric addresses; the hash tables are sets of uppercase 16-digit hex
+entity hashes. The first snapshot baselines existing objects. Later updates only
+release new, inactive, locally owned grenades from listed launchers in solo missions,
+after verifying the weapon's selected entity, owner, unit pose and launch speed.
+Initialization is retried for up to eight updates. Each eligible object is released
+once through existing throwable and explosive routines. Native signatures must
+match the supported game build. No engine instructions are patched.
+
+The optional `native` fourth argument to `helper.new` supplies `query`, `release`,
+`start` and `arm` callbacks for offline testing. Run service regression tests with:
+
+```powershell
+uv run --with lupa python -m unittest discover -s tests -p test_throwable_launch.py -v
+```
+
 ## Startup and compatibility
 
 Discovery reads deployed `data/9ba626afa44a3aa3.patch_<number>` files once, using
