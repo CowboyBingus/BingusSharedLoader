@@ -1,7 +1,7 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
 -- version stays 17, as in v18: mods compare it, and nothing they can rely on changed.
-state = {version = 17, api = 1, modules = {}, revision = 'loader-v19'}
+state = {version = 17, api = 1, modules = {}, revision = 'loader-v20'}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 -- Captured before any mod loads: a mod that replaces one of these globals
@@ -215,11 +215,14 @@ local function write_log()
     pcall(function()
         local file = open_file(LOG_NAME)
         if not file then return end
-        local lines = {'Bingus Shared Loader loader-v19; API 1'}
+        local lines = {'Bingus Shared Loader loader-v20; API 1'}
         for _, line in ipairs(header) do lines[#lines + 1] = line end
         if state.discovery then lines[#lines + 1] = 'Discovery: ' .. state.discovery end
         for _, note in ipairs(copies.notes) do lines[#lines + 1] = '  ' .. note end
-        if jit_cache then lines[#lines + 1] = jit_cache.describe() end
+        if jit_cache then
+            lines[#lines + 1] = jit_cache.describe()
+            if jit_cache.add_churn_lines then jit_cache.add_churn_lines(lines) end
+        end
         add_module_lines(lines)
         if finished then lines[#lines + 1] = finished end
         add_callback_lines(lines)
@@ -356,13 +359,57 @@ end
 -- The builder embeds src/jit_budget.lua in this lexical scope. The game's
 -- LuaJIT code cache is shared by every mod, so its limits are raised before
 -- any mod starts. state.jit also tells older fallbacks the loader manages it.
+-- The churn guard (src/jit_guard.lua, embedded like jit_budget) gets the watcher's start and
+-- abort events. It blacklists churning starts unless BingusSharedLoader-jit-guard.off exists in
+-- %LOCALAPPDATA%/CowboyBingus/Helldivers2, checked once here; with the file it only counts.
+local function jit_guard_switched_off()
+    local base = getenv and getenv('LOCALAPPDATA')
+    if not open or not base or base == '' then return false end
+    local ok, file = pcall(open, base .. '/CowboyBingus/Helldivers2/BingusSharedLoader-jit-guard.off', 'rb')
+    if not ok or not file then return false end
+    pcall(file.close, file)
+    return true
+end
+
+-- Chunk name and line of a trace start, and the route's name: jit.util.funcinfo, else
+-- debug.getinfo (first line of the function), else none.
+local function trace_start_info()
+    local ok, util = pcall(builtin, 'jit.util')
+    local funcinfo = ok and type(util) == 'table' and util.funcinfo
+    if type(funcinfo) == 'function' then
+        return function(func, pc)
+            local info = funcinfo(func, pc)
+            return info.source, info.currentline
+        end, 'jit.util.funcinfo'
+    end
+    local getinfo = type(debug) == 'table' and debug.getinfo
+    if type(getinfo) ~= 'function' then return nil, 'none' end
+    return function(func)
+        local info = getinfo(func, 'S')
+        return info.source, info.linedefined
+    end, 'debug.getinfo'
+end
+
+local function jit_churn_guard(cache_public, log)
+    if not jit_guard then return nil end
+    local ok, ffi = pcall(builtin, 'ffi')
+    local native = ok and type(ffi) == 'table' and jit_guard.native(ffi) or nil
+    local info, info_route = trace_start_info()
+    local notes = 'owners from ' .. info_route .. '; native access ' .. (native and 'ffi' or 'unavailable')
+    return jit_guard.new({identity = native and native.identity,
+        locate = native and function() return native.locate(cache_public) end,
+        handle = not jit_guard_switched_off(), info = info, log = log, notes = notes,
+        clock = type(os) == 'table' and os.time or nil})
+end
+
 if jit_budget then
     local registry = type(debug) == 'table' and debug.getregistry or nil
     local function log()
         declare_v18_log_names()
         write_log()
     end
-    local ok, cache = pcall(jit_budget.start, rawget(_G, 'jit'), {log = log, registry = registry})
+    local ok, cache = pcall(jit_budget.start, rawget(_G, 'jit'),
+        {log = log, registry = registry, guard = jit_churn_guard})
     if ok then
         jit_cache, state.jit = cache, cache.public
         pcall(print, '[BingusSharedLoader] ' .. cache.describe())

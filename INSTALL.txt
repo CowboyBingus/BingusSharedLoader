@@ -1,10 +1,12 @@
-Supports Steam build 25480438 / EXE 1.8.46015.0. Tested in recorded real play aboard the ship and in a mission.
+Supports Steam build 25480438 / EXE 1.8.46015.0. Tested in game aboard the ship and in a mission.
 
-v19: starts the game's shared LuaJIT code cache at 64 MB / 8,000 traces (growing to
-256 MB / 16,000 after a flush), adds after_startup for mods, and writes a fuller
-startup log; API 1 and addon discovery preserved. The loader log shows a "LuaJIT
-cache:" line. Recommended for every CowboyBingus mod (they need v18 or newer):
-replace the previous loader entry.
+v20: adds the LuaJIT churn guard, so code that keeps failing to compile is no
+longer retried all session; the loader log shows a "LuaJIT churn:" line.
+Since v19 the loader starts the game's shared LuaJIT code cache at 64 MB / 8,000
+traces (growing to 256 MB / 16,000 after a flush), adds after_startup for mods,
+and writes a fuller startup log; API 1 and addon discovery preserved. The loader
+log shows a "LuaJIT cache:" line. Recommended for every CowboyBingus mod (they
+need v18 or newer): replace the previous loader entry.
 
 Includes the shared log folder for supported mods.
 
@@ -12,7 +14,7 @@ Logs: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs
 
 
 
-Bingus Shared Loader - v19
+Bingus Shared Loader - v20
 
 
 
@@ -26,7 +28,7 @@ Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Contr
 
 Install with Arsenal or HD2MM: import
 
-Bingus-Shared-Loader-v19.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v20.zip, enable it alongside your chosen mods, then click Deploy.
 
 One loader installation supports all your selected mods.
 
@@ -54,7 +56,7 @@ Supported: Steam build 25480438 / EXE 1.8.46015.0.
 
    in HDArsenal or HD2MM. Use only one manager.
 
-3. Import Bingus-Shared-Loader-v19.zip and Vanilla-Plus-Megapack-v37.zip or your chosen
+3. Import Bingus-Shared-Loader-v20.zip and Vanilla-Plus-Megapack-v42.zip or your chosen
 
    current gameplay module ZIPs. Current standalone copies can remain
 

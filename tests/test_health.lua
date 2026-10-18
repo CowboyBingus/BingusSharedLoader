@@ -485,7 +485,7 @@ do
     local path = ffi.new('char[32768]')
     local exe = health.hex(file_stamp(ffi.string(path, kernel.GetModuleFileNameA(nil, path, 32768))))
     local expected = {
-        '^Bingus Shared Loader loader%-v19; API 1$',
+        '^Bingus Shared Loader loader%-v20; API 1$',
         '^Started: %d%d%d%d%-%d%d%-%d%d %d%d:%d%d:%d%d$',
         '^Game build stamps: executable ' .. exe .. ', game%.dll unknown$',
         '^Lua at start: heap %d+ KB, GC pause ' .. pause_before .. ', GC step multiplier %d+, JIT on$',
@@ -495,6 +495,8 @@ do
             .. ' %(module stamp 6AB3B43F%), executable stamp 6AB382E4; 1 dump in total$',
         '^Discovery: failed: ',
         '^LuaJIT cache: expanded 65536 KB / 8000 traces; flushes %d+, growth %d+; watcher on$',
+        '^LuaJIT churn: no start kept failing; guard on$',
+        '^  churn guard: owners from [%a%.]+; native access ffi$',
         '^' .. NAMES.megapack:gsub('%p', '%%%0') .. ': loaded$',
         '^  changes: heap [+-]%d+ KB, %d+ ms; added VanillaPlusMegapack; replaced update$',
         '^' .. NAMES.bounce:gsub('%p', '%%%0') .. ': loaded$',
@@ -536,7 +538,7 @@ do
     string.bslt_extra, getmetatable('').__bslt = nil, nil
     local started = lines[2]:match('^Started: (.+)$')
     check('previous session finished', run.lines[5] == 'Previous session: started ' .. started
-        .. ' (loader-v19); startup finished: 2 loaded, 1 failed', run.lines[5])
+        .. ' (loader-v20); startup finished: 2 loaded, 1 failed', run.lines[5])
 end
 
 -- 8. Kept out of the JIT ---------------------------------------------------------------

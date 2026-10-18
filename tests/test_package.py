@@ -14,8 +14,8 @@ from build import TESTED_CALLBACK_SHA
 
 # Release ZIPs only, unless a development revision is named (build.py --probe);
 # a development ZIP checked as a release fails on its revision and name.
-REVISION = sys.argv[2] if len(sys.argv) > 2 else 'loader-v19'
-DEVELOPMENT = REVISION != 'loader-v19'
+REVISION = sys.argv[2] if len(sys.argv) > 2 else 'loader-v20'
+DEVELOPMENT = REVISION != 'loader-v20'
 
 with zipfile.ZipFile(sys.argv[1]) as package:
     names = package.namelist()

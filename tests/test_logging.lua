@@ -28,7 +28,7 @@ local function run(kind)
             load=function(name)assert(name=='kernel32');return kernel end}
     end},{__index=_G});env._G=env
     setfenv(assert(loadfile(source..'/shared_loader.lua')),env)()
-    local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1 and state.revision=='loader-v19')
+    local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1 and state.revision=='loader-v20')
     -- The loader's own Windows functions are declared once, under private names
     -- only: a plain name would bind to whichever prototype another mod declared
     -- first. Then, as in v18, the plain log pair once for other mods, only with

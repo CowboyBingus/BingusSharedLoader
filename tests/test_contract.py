@@ -45,6 +45,10 @@ ADDED_STATE_KEYS = {
     'health:table': 'v19: the health report data (header lines and per-module changes)',
     'revision:string': 'v19: the build revision, so tools need not compare version numbers',
 }
+# Fields added to state.jit (CowboyBingusModLoader.jit), each with its reason.
+ADDED_JIT_KEYS = {
+    'churn': 'v20: the churn guard counts (starts kept failing, handled, mode); read-only data',
+}
 WWISE = resource_hash('core/wwise/lua/wwise_flow_callbacks')
 # Scenarios where the recorded release was broken and this build is not, with the
 # reason. The expectation is the recorded contract with exactly this repair.
@@ -168,6 +172,8 @@ def main():
         actual = snapshot(args.build / 'callbacks.lua.main', args.build, name)
         if 'state' in actual:
             actual['state']['keys'] = [key for key in actual['state']['keys'] if key not in ADDED_STATE_KEYS]
+            for key in ADDED_JIT_KEYS:
+                (actual['state'].get('jit') or {}).pop(key, None)
         expected = recorded['scenarios'][name]
         if name in FIXED:
             expected = repaired(name, expected)

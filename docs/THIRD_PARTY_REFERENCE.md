@@ -3,7 +3,7 @@
 For authors of Helldivers 2 mods that run beside the CowboyBingus mods. Every Lua
 mod shares the game's one LuaJIT VM, its globals, its files and its native UI.
 This page lists what the CowboyBingus mods use, so that your mod can stay clear
-of it. It describes the sources released with Bingus Shared Loader v19, for Steam
+of it. It describes the sources released with Bingus Shared Loader v20, for Steam
 build 25480438 (October 2026). Each mod's README documents its own API in full.
 
 ## Loader contract (API 1)
@@ -16,15 +16,15 @@ nothing.
 | Field | Meaning |
 | --- | --- |
 | `api` | `1`. |
-| `version` | `17` in v18 and v19; it does not follow the release number. Never compare it. |
-| `revision` | `'loader-v19'`, for logs and tools. |
+| `version` | `17` in v18 to v20; it does not follow the release number. Never compare it. |
+| `revision` | `'loader-v20'`, for logs and tools. |
 | `capabilities` | Read-only: `api`, `logs`, `discovery`, `jit_budget`, `health`, `after_startup`. Test these, not `version`. v18 and older have no table. |
 | `modules` | Resource name to status: `loaded`, `loading`, `not installed`, `load failed: ...` or `lookup failed: ...`. |
 | `discovery` | `N declared entries` (plus archive warnings) or `failed: ...`. |
 | `open_log(name)` | A file open for writing in `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs`, or nil. `name` must match `^[%w_-]+%.log$`. Each call empties the file. |
 | `log_directory` | That folder, once it exists. |
 | `after_startup(fn)` | Runs `fn` once, after every module of this startup has started and before the first game update; at once when startup is over. See [AUTHORING.md](AUTHORING.md#running-code-once-every-mod-has-started). |
-| `jit` | The shared LuaJIT code cache: `managed`, `expanded`, `mcode_kb`, `traces`, `flushes`, `growths`, `watcher`. |
+| `jit` | The shared LuaJIT code cache: `managed`, `expanded`, `mcode_kb`, `traces`, `flushes`, `growths`, `watcher`; from v20 also `churn`, the churn guard's counts (see [TECHNICAL.md](TECHNICAL.md#luajit-churn-guard-v20)). |
 | `health` | The health report in the loader log (`header`, `changes`). |
 | `megapack` | Set by Vanilla Plus Megapack: `name`, `revision`, `modules`. |
 

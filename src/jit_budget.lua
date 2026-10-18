@@ -17,6 +17,9 @@
 -- Cost: no work on any frame. The watcher runs only when the JIT starts, stops,
 -- aborts or flushes a trace; a flush adds one jit.opt.start call and at most one
 -- log write per LOG_INTERVAL seconds (plus one per growth step).
+--
+-- The same watcher passes 'start' and 'abort' events to the churn guard (src/jit_guard.lua)
+-- when the loader gives one (hooks.guard). A guard that raises is stopped; growth goes on.
 local budget = {}
 
 -- Captured when the loader starts, before any mod could replace them.
@@ -38,7 +41,8 @@ end
 
 -- library: the game's jit table. hooks: log() rewrites the loader log;
 -- clock() in seconds and heap() in KB are replaceable for tests; registry()
--- returns the Lua registry (debug.getregistry), used to check the watcher.
+-- returns the Lua registry (debug.getregistry), used to check the watcher;
+-- guard(public, log) returns the churn guard (jit_guard.new) or nil.
 function budget.start(library, hooks)
     hooks = hooks or {}
     local log = hooks.log or function() end
@@ -73,8 +77,17 @@ function budget.start(library, hooks)
         return true
     end
 
-    local function on_trace(what)
-        if what == 'stop' then
+    local churn, guard_event = nil, nil
+    local function on_trace(what, tr, func, pc, otr)
+        if what == 'start' or what == 'abort' then
+            if guard_event then
+                local ok, message = pcall(guard_event, what, tr, func, pc, otr)
+                if not ok then
+                    guard_event = nil
+                    pcall(churn.failed, message)
+                end
+            end
+        elseif what == 'stop' then
             compiled = compiled + 1
         elseif what == 'flush' then
             public.flushes, public.compiled_before_flush, compiled = public.flushes + 1, compiled, 0
@@ -110,6 +123,11 @@ function budget.start(library, hooks)
             public.mcode_kb, public.traces, public.flushes, public.growths, watcher)
     end
 
+    -- The churn guard's log lines (header, then one per churning start), when it runs.
+    function cache.add_churn_lines(lines)
+        if churn then pcall(churn.add_lines, lines) end
+    end
+
     if type(opt) ~= 'function' then
         public.reason = 'jit.opt unavailable'
         return cache
@@ -119,6 +137,12 @@ function budget.start(library, hooks)
         return cache
     end
     public.managed, public.expanded = true, true
+    if type(hooks.guard) == 'function' then
+        local ok, value = pcall(hooks.guard, public, log)
+        if ok and type(value) == 'table' and type(value.event) == 'function' then
+            churn, guard_event, public.churn = value, value.event, value.public
+        end
+    end
     if type(library.attach) == 'function' then
         public.watcher = pcall(library.attach, on_trace, 'trace')
     end

@@ -19,8 +19,8 @@ CALLBACK_PATH = 'core/wwise/lua/wwise_flow_callbacks'
 # while no played build is pinned. Only scripts/pin_tested.py writes it, from a
 # clean TestHarness run that deployed the release ZIP holding that resource;
 # runtime_verified is true only for it.
-# Pinned by scripts/pin_tested.py from TestHarness run 20261004-163032-smoke-ship.
-TESTED_CALLBACK_SHA = '7A0713580F5A8C413571F4B7F57BC0AE63A4FDA4A8C67009C5058D08F5472799'
+# Pinned by scripts/pin_tested.py from TestHarness run 20261017-212814-packages.
+TESTED_CALLBACK_SHA = 'F0C938AAE338397C33AB5AED5268CD68C31A47B3403ADF6341C5ECACADDE1F77'
 
 
 def run(args, **kwargs):
@@ -33,7 +33,7 @@ def run(args, **kwargs):
 # Development-only variant, never published: --probe embeds src/frame_probe.lua. Its hooks
 # are inserted into the coordinator text here, so the public build's sources and resource
 # stay as they are.
-PROBE_REVISION = 'loader-v19-probe4'
+PROBE_REVISION = 'loader-v20-probe4'
 PROBE_HOOKS = [
     # Before the first module starts: the probe wraps the game's update and render,
     # and the loader log names the probe on its second line (the study checks the first).
@@ -64,6 +64,7 @@ def bootstrap(stock_bytes, probe=False):
     literal = '"' + ''.join(f'\\{byte:03d}' for byte in stock_bytes) + '"'
     discovery = (ROOT / 'src/discover.lua').read_text(encoding='utf-8')
     budget = (ROOT / 'src/jit_budget.lua').read_text(encoding='utf-8')
+    churn_guard = (ROOT / 'src/jit_guard.lua').read_text(encoding='utf-8')
     health = (ROOT / 'src/health.lua').read_text(encoding='utf-8')
     coordinator = (ROOT / 'src/shared_loader.lua').read_text(encoding='utf-8')
     timing = ''
@@ -76,6 +77,7 @@ def bootstrap(stock_bytes, probe=False):
     # discover.lua and health.lua turn the JIT off for the function each runs in: keep their wrappers.
     return ('local function initialize_addons()\n'
             'local addon_discovery = (function()\n' + discovery + '\nend)()\n'
+            'local jit_guard = (function()\n' + churn_guard + '\nend)()\n'
             'local jit_budget = (function()\n' + budget + '\nend)()\n'
             'local loader_health = (function()\n' + health + '\nend)()\n'
             + timing + coordinator + '\nend\n'
@@ -138,8 +140,13 @@ def probe_tests(folder, env):
 
 def main():
     # --probe builds the development-only frame probe loader into build-probe/; never publish it.
+    # --dev NAME (e.g. jitguard1) builds the release sources as revision loader-v20-NAME into
+    # build-<NAME without its number>/, ZIP included, for harness runs; never publish it.
     probe = '--probe' in sys.argv[1:]
-    BUILD, revision = (ROOT / 'build-probe', PROBE_REVISION) if probe else (ROOT / 'build', 'loader-v19')
+    dev = sys.argv[sys.argv.index('--dev') + 1] if '--dev' in sys.argv[1:] else None
+    BUILD, revision = (ROOT / 'build-probe', PROBE_REVISION) if probe else (ROOT / 'build', 'loader-v20')
+    if dev:
+        BUILD, revision = ROOT / ('build-' + dev.rstrip('0123456789')), 'loader-v20-' + dev
     BUILD.mkdir(exist_ok=True)
     boot, callback = vanilla_inputs()
     (BUILD / 'vanilla-boot.ljbc').write_bytes(boot[8:])
@@ -153,6 +160,11 @@ def main():
     tests += run([LUA, ROOT / 'tests/test_jit_budget.lua', ROOT / 'src'], env=env)
     # The installed game's own LuaJIT 2.1.0-alpha, in this process only; skipped without the game.
     tests += run([sys.executable, ROOT / 'tests/test_jit_budget_game.py', ROOT / 'src'], env=env)
+    # The churn guard: fake events in both VMs, then real aborting starts in the game's LuaJIT.
+    tests += run([LUA, ROOT / 'tests/test_jit_guard.lua', ROOT / 'src'], env=env)
+    tests += run([sys.executable, ROOT / 'tests/game_lua.py', ROOT / 'tests/test_jit_guard.lua', ROOT / 'src'], env=env)
+    tests += run([sys.executable, ROOT / 'tests/game_lua.py', ROOT / 'tests/test_jit_guard_game.lua', ROOT / 'src'],
+                 env=env)
     tests += run([sys.executable, ROOT / 'tests/game_lua.py', ROOT / 'tests/test_discovery.lua', ROOT / 'src'], env=env)
     tests += run([sys.executable, ROOT / 'tests/test_addon_package.py'], env=env)
     tests += run([sys.executable, ROOT / 'tests/test_discovery_integration.py'], env=env)
@@ -171,15 +183,16 @@ def main():
         'game_exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
         'deployment_files': files, 'files': {p: sha((ROOT / p).read_bytes()) for p in files.values()},
         'original_callbacks_sha256': CALLBACK_SHA, 'boot_replaced': False,
-        'gameplay_changes': False, 'runtime_verified': not probe and sha(resource) == TESTED_CALLBACK_SHA,
+        'gameplay_changes': False,
+        'runtime_verified': not probe and not dev and sha(resource) == TESTED_CALLBACK_SHA,
         'offline_tests': tests.strip(),
     }
     report['source_sha256'] = {p.relative_to(ROOT).as_posix(): sha(p.read_bytes())
         for folder, glob in [('src', '*.lua'), ('tests', '*.lua'), ('scripts', '*.py')]
         for p in (ROOT / folder).glob(glob)}
     # Probe ZIPs go straight to their own folder, never to a releases folder.
-    release = package_release(ROOT, BUILD, report, BUILD if probe else None)
-    tests += run([sys.executable, ROOT / 'tests/test_package.py', release] + ([revision] if probe else []))
+    release = package_release(ROOT, BUILD, report, BUILD if probe or dev else None)
+    tests += run([sys.executable, ROOT / 'tests/test_package.py', release] + ([revision] if probe or dev else []))
     report['offline_tests'] = tests.strip()
     report['release'] = {'path': Path(os.path.relpath(release, ROOT)).as_posix(), 'sha256': sha(release.read_bytes())}
     (BUILD / 'build-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')

@@ -73,7 +73,7 @@ Both packages still declare the same Wwise resource. The manager must deploy our
 
 The overlay wraps and forwards `update` and `shutdown`. Its existing `HUDBTO.ini` reader and defaults are unchanged. The integration fixture supplies a fake executable-path resolver and blocks gameplay memory APIs. no native game code is executed. Checks cover 64 installed-module/HUD+/Wwise combinations, or 128 when the optional Consistent Vaulting package is supplied, along with configuration reads and reloads, callback arguments and return tuples, temporary-memory restoration, missing FFI, cached module loads and repeated coordinator execution. The maintainer separately confirmed loader-v3 works in-game with this overlay. the offline fixture does not simulate live world cleanup or multiplayer.
 
-The build marks `runtime_verified` only when the compiled callback resource matches `TESTED_CALLBACK_SHA` in `scripts/build.py`, and only `scripts/pin_tested.py` writes that constant. It takes a TestHarness run and the release ZIP that run deployed, and pins the ZIP's resource only when the run was clean (it reached the ship, quit through the engine with exit code 0 with the test agent seeing the shutdown, left no crash dump, restored the install, and ran the supported game build), the run record holds the ZIP's SHA-256 (`facts.package_sha256`, or `{"name", "sha256"}` entries in `facts.packages`), the run's loader log starts with the ZIP's revision and reaches `Startup finished`, and the resource equals the one the current sources build, compiled again in a temporary folder. Otherwise it lists every reason and writes nothing; `--check` only reports. A run record that names its packages without their hashes is refused, because it cannot show which bytes were deployed. Changing the runtime makes a subsequent build unverified until it is played and pinned again. The value in place before v19 was set by hand on 2026-09-17 and matched none of the v16, v17 or v18 resources, so those builds reported `runtime_verified: false`. v19 cleared it, and the v19 release pins the resource played in a clean ship run on 2026-10-04 (`7A071358...`), so the release build reports `runtime_verified: true`. Release documentation and provenance can be updated without changing the tested game resource. `tests/test_pin_tested.py` covers each refusal with synthetic runs and ZIPs and never writes the real build script.
+The build marks `runtime_verified` only when the compiled callback resource matches `TESTED_CALLBACK_SHA` in `scripts/build.py`, and only `scripts/pin_tested.py` writes that constant. It takes a TestHarness run and the release ZIP that run deployed, and pins the ZIP's resource only when the run was clean (it reached the ship, quit through the engine with exit code 0 with the test agent seeing the shutdown, left no crash dump, restored the install, and ran the supported game build), the run record holds the ZIP's SHA-256 (`facts.package_sha256`, or `{"name", "sha256"}` entries in `facts.packages`), the run's loader log starts with the ZIP's revision and reaches `Startup finished`, and the resource equals the one the current sources build, compiled again in a temporary folder. Otherwise it lists every reason and writes nothing; `--check` only reports. A run record that names its packages without their hashes is refused, because it cannot show which bytes were deployed. Changing the runtime makes a subsequent build unverified until it is played and pinned again. The value in place before v19 was set by hand on 2026-09-17 and matched none of the v16, v17 or v18 resources, so those builds reported `runtime_verified: false`. v19 cleared it, and the v19 release pins the resource played in a clean ship run on 2026-10-04 (`7A071358...`), so the v19 release build reported `runtime_verified: true`. The v20 release pins the resource played in a clean harness run on 2026-10-17 to the ship and a mission with Vanilla Plus Megapack v42 (`F0C938AA...`, run 20261017-212814-packages), so the v20 release build reports `runtime_verified: true`. Release documentation and provenance can be updated without changing the tested game resource. `tests/test_pin_tested.py` covers each refusal with synthetic runs and ZIPs and never writes the real build script.
 
 The fixture hash pins the reviewed release during verification. Runtime discovery checks the resource name, not a release fingerprint. a future release using that name will also be attempted and is not automatically certified compatible. Reinspect changed releases and update the fixture only after validating the new startup contract.
 
@@ -138,6 +138,100 @@ the installed game's own `lua51.dll`, in the test process only. There, real
 overflows of a deliberately tiny cache flush, the watcher grows the limits, and
 later code compiles without a flush. The check is skipped when the game is not
 installed.
+
+## LuaJIT churn guard (v20)
+
+When a trace start aborts, LuaJIT records it in a 64-slot penalty cache
+(`J->penalty`) and doubles its penalty on every further abort. After about ten
+aborts the penalty passes 60000 and LuaJIT blacklists the start, so it is never
+recorded again. When more than 64 starts abort in turn, each evicts others before
+they get there, and they are recorded again for the whole session ("churn"). The
+64 is compiled into `lua51.dll`. Megapack v42 churns in game (13-36 evicted
+starts came back per 2 minutes, `PerformanceBaseline/jit_cache.py penalties
+120`), and more third-party mods churn more.
+
+`src/jit_guard.lua` is embedded like `jit_budget.lua`. It gets the `start` and
+`abort` events of the existing trace watcher; it never attaches a handler of its
+own. It has two layers:
+
+- **Watch** (always on). A root start is remembered at `start`. At its `abort`,
+  the start's count goes up, except for code 6 ('retry recording'), which
+  LuaJIT does not penalize. Side and stitched traces are skipped. Counts are
+  kept per function, then per bytecode index, in weak-keyed tables. Closures of
+  one prototype share their counts: they are keyed by the bytecode address,
+  read once per function. LuaJIT blacklists a start it still remembers at its
+  11th penalized abort, so a start with more than `CHURN_ABORTS` = 12 aborts must
+  have been evicted at least once: it is churning. Lost events only lower a count.
+  It is logged once, with its chunk, line and reason.
+- **Handle** (on unless switched off). At the abort that makes a start churn,
+  the guard finds the start's own penalty slot by its bytecode address. It sets
+  the slot's value to 60000 and sets the start's hot counter
+  (`hotcount[64]`, which follows the jit_State) to 1. The counter is set only
+  while it still holds the value LuaJIT's penalty just wrote there; 1 is the
+  value LuaJIT itself uses for 'retry recording'. The start records again at its
+  next run, and that abort makes LuaJIT blacklist it through its own path,
+  before other starts can evict the slot. An abort that still finds 60000 in
+  the slot is that blacklisting. If the slot was evicted first, the guard bumps
+  the start again, at most `BUMPS` = 4 times per start. Starts from any chunk
+  are handled (game, Bingus mods, third-party mods): the guard only finishes
+  LuaJIT's own policy.
+
+Both stores are 16-bit data writes into `GG_State`, which is Lua heap memory.
+Nothing writes game code or bytecode, and the guard never calls `jit.off`,
+`jit.flush` or `jit.opt`. The `jit_State` is found once, at the first churning
+start. `string.format('%p', coroutine.create(...))` gives a `lua_State` address
+(the game replaces `tostring`, which shows `[thread (deleted)]` and `[function]`;
+function addresses come from `%p` too, with `tostring` only as a fallback), whose
+`glref` (+8) points to `global_State`. One `ReadProcessMemory` of 16 KB from
+there locates `J->param` by its tail (56, 10, 4, 4, 15, 3, 2, 64), and the guard
+checks that `maxtrace` and `maxmcode` equal the limits the loader set. In the
+game's DLL, `J->param` is at `global_State + 1964`, the penalty cache at
+`param + 188`, `penaltyslot` at `param + 700` and the hot counters at
+`param + 956`. When any step fails, or a global the guard needs is missing in
+the game (`coroutine.create`, the FFI), the guard stays watch only and logs why.
+If the guard raises an error, the watcher stops calling it; flush growth goes
+on.
+
+**Off switch.** If the file
+`%LOCALAPPDATA%/CowboyBingus/Helldivers2/BingusSharedLoader-jit-guard.off`
+exists when the loader starts, the guard stays watch only. It still counts and
+logs, but it changes nothing.
+
+**Log.** The cache line is followed by a header line, for example `LuaJIT churn:
+12 starts kept failing (handled 12); top owners: mods/x/y 5, ...; guard on`.
+Then come the locate route, which routes were available, the counts
+(blacklisted, lost bumps, unmatched, retried), and one line per churning start
+(at most 24). The log is rewritten at the first churning start and then at most
+once per 30 s, at a trace event, never per frame. `CowboyBingusModLoader.jit.churn`
+exposes the counts (`starts`, `handled`, `blacklisted`, `returned`,
+`unmatched`, `aborts`, `mode`, `route`).
+
+**Cost.** Nothing on any frame: the guard runs only at trace events. Per event,
+a few table operations. A new start key or a churning start allocates once;
+events of known starts allocate nothing. A churning abort adds one 64-slot
+match and up to two 16-bit stores. Locate runs once: one `coroutine.create`, one
+`GetCurrentProcess` and one `ReadProcessMemory` of 16 KB. Measured in the test
+process only, interpreted: about 0.015 us per `start` event, 0.08 us per counted
+abort, 1.7 us per 64-slot match and 6-24 us for locate. The guard's own in-game
+cost per event is not measured.
+
+**Measured in game** (test harness, 2026-10-17). With Megapack v42, starts that
+came back after eviction fell from 13-36 per 2 minutes to 0, and 54-65 churning
+starts per session went to LuaJIT's own blacklist. With 100 extra churning starts
+on the ship, failed recordings cost 0.028-0.035 ms per frame without the guard
+and 0.007 ms with it, nearly all of that in the first 30 s.
+
+**Tests.** `tests/test_jit_guard.lua` checks counting, the threshold, handling,
+lost bumps, the off switch, locate failures, log throttling, the log lines,
+zero allocation and the watcher integration, using fake events. It runs in both
+VMs. `tests/test_jit_guard_game.lua` runs through `tests/game_lua.py` in the
+game's own `lua51.dll`, with 100 real churning starts (`pairs` loops in
+separate chunks). Switched off, they keep aborting (about 18,500 aborts per 100
+frames). With the guard, every churning start is handled and aborts settle to
+0-2 per 100 frames. With 20 starts, LuaJIT blacklists them itself and the guard
+handles none. The test also checks that locate matches an independent scan,
+that every bump hits the start's own slot, that idle frames allocate nothing,
+that flush growth is unchanged, and that a raising guard is stopped.
 
 ## Health report (v19)
 
@@ -294,4 +388,4 @@ scenarios are otherwise unchanged.
 
 ## Frame probe build (development only, never published)
 
-`scripts/build.py --probe` makes a loader for the maintainer's real-play performance study; it is never released. It embeds `src/frame_probe.lua` and adds two hooks to the coordinator text at build time: before the first module starts, the probe wraps the game's `update`, `render` and `shutdown`; after each module's require, a changed `update` or `render` becomes that module's timed layer. Hooks installed later, including from `after_startup` callbacks, become a `late hook` layer on the next frame. It writes `BingusFrameProbe.log` and `BingusFrameProbe-seconds.csv` (schema 4) to the shared log folder. Revision `loader-v19-probe4`; the loader log's second line names it; `runtime_verified` is false. The public build is byte-identical with or without these files. Every 40 s the probe skips all mod hooks for 10 s and Enemy Collision Synchronized for another 10 s.
+`scripts/build.py --probe` makes a loader for the maintainer's real-play performance study; it is never released. It embeds `src/frame_probe.lua` and adds two hooks to the coordinator text at build time: before the first module starts, the probe wraps the game's `update`, `render` and `shutdown`; after each module's require, a changed `update` or `render` becomes that module's timed layer. Hooks installed later, including from `after_startup` callbacks, become a `late hook` layer on the next frame. It writes `BingusFrameProbe.log` and `BingusFrameProbe-seconds.csv` (schema 4) to the shared log folder. Revision `loader-v20-probe4`; the loader log's second line names it; `runtime_verified` is false. The public build is byte-identical with or without these files. Every 40 s the probe skips all mod hooks for 10 s and Enemy Collision Synchronized for another 10 s.

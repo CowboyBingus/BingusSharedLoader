@@ -31,9 +31,9 @@ for outcome in ('running', 'not running'):
     lines = [row.split('\t', 1)[1] for row in rows if row.split('\t', 1)[0] == outcome]
     # The real log's third line is the health report's start time.
     lines = lines[:2] + ['Started: 2026-10-04 12:00:00']
-    assert lines[0] == 'Bingus Shared Loader loader-v19; API 1', lines
-    assert lines[1].startswith('Development build loader-v19-probe4: frame probe schema 4 ' + outcome), lines
+    assert lines[0] == 'Bingus Shared Loader loader-v20; API 1', lines
+    assert lines[1].startswith('Development build loader-v20-probe4: frame probe schema 4 ' + outcome), lines
     assert study_problems(lines, perfkit.MOD_FAILURE) == [], (outcome, lines)
-    assert study_problems(['Bingus Shared Loader loader-v19-probe4; API 1'] + lines[1:], perfkit.MOD_FAILURE)
+    assert study_problems(['Bingus Shared Loader loader-v20-probe4; API 1'] + lines[1:], perfkit.MOD_FAILURE)
     assert study_problems(lines[:1] + ['Frame probe failed to start'] + lines[2:], perfkit.MOD_FAILURE)
 print('PASS: probe loader log header passes perfkit.MOD_FAILURE and the -probe check in both outcomes')

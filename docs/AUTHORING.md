@@ -151,7 +151,7 @@ under v18.
 ## Testing for loader features
 
 `CowboyBingusModLoader.api` remains exactly `1`. The internal `version` does
-not follow the release number (`17` for releases v18 and v19, `16` for v15 to
+not follow the release number (`17` for releases v18 to v20, `16` for v15 to
 v17), so never compare it. From v19, test the read-only `capabilities` table:
 
 ```lua
@@ -179,7 +179,7 @@ session: `loader.discovery` reads `failed: ...` when discovery could not run,
 and `loader.jit.managed` is false when the cache limits could not be raised.
 The table is read-only and assigning a field raises an error. Its fields are
 looked up through its metatable, so `pairs()` lists none of them: test the
-names you need. `revision` (`'loader-v19'`) names the build for logs and tools.
+names you need. `revision` (`'loader-v20'`) names the build for logs and tools.
 Existing globals, module statuses and `open_log` remain.
 
 ## Running code once every mod has started
@@ -245,7 +245,7 @@ the same name is silently ignored, even with a different prototype or layout,
 and every call uses the first one. Defining a `struct`, `union` or `enum` tag a
 second time raises `attempt to redefine`.
 
-For compatibility with mods written for v18, the loader (v18 and v19) declares
+For compatibility with mods written for v18, the loader (v18 to v20) declares
 these six functions under their plain Windows names, with exactly this text:
 
 ```c
@@ -303,3 +303,26 @@ reports its state in `CowboyBingusModLoader.jit` (`managed`, `expanded`,
 - Keep per-frame code lean and free of new closures and errors used for
   control flow: code that cannot compile runs slower, and code that compiles
   into many traces fills the shared cache for everyone.
+
+## Keep hot code compilable
+
+LuaJIT remembers only 64 trace starts that failed to compile. Each start it
+remembers is blacklisted after about ten failures. When more than 64 starts keep
+failing at the same time, they push each other out and are retried all session,
+and every retry costs a recording that is thrown away. Code that runs every
+frame should therefore compile, or stay out of the JIT:
+
+- No `pairs` or `next` loops in per-frame code: this LuaJIT cannot compile them.
+  Iterate an array with a numeric `for`, or keep a list beside the table.
+- No closures created per frame (`function` inside a per-frame function or
+  loop). Create them once and reuse them.
+- Turn the JIT off for cold code and for a function that keeps failing:
+  `jit.off(f)` on your own functions only, never on other code.
+- Never wrap `update` in a fixed-argument wrapper. Use `update(...)` with the
+  step under `pcall`: traces stop there, so your traces stay inside your mod.
+
+The loader's churn guard (v20, see `docs/TECHNICAL.md`) is the
+safety net. A start that keeps failing after it was pushed out gets blacklisted,
+as LuaJIT would have done with a larger cache, and the loader log names its
+chunk and line. A line naming your mod there means a hot loop or function to
+fix.
