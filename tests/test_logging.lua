@@ -1,4 +1,5 @@
 local source=assert(arg[1])
+local fixture=dofile(arg[0]:gsub('[%w_]+%.lua$','')..'build_fixture.lua')
 local expected='C:/TestData/CowboyBingus/Helldivers2/Logs'
 local function run(kind)
     local directories,opened,declared={},{},{}
@@ -27,6 +28,9 @@ local function run(kind)
         return {cdef=function(text)declared[#declared+1]=text end,
             load=function(name)assert(name=='kernel32');return kernel end}
     end},{__index=_G});env._G=env
+    env.build_gate=fixture.supported_gate() -- the source run as the supported build
+    -- The fixture loaded the real ffi in this process: the loader's builtin lookup must reach the fake.
+    env.package={loaded={},preload={ffi=function()end}}
     setfenv(assert(loadfile(source..'/shared_loader.lua')),env)()
     local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1 and state.revision=='loader-v20')
     -- The loader's own Windows functions are declared once, under private names

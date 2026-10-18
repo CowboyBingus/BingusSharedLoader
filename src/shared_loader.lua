@@ -18,12 +18,13 @@ local getenv = type(os) == 'table' and os.getenv or nil
 -- What this loader build supports, for mods to test instead of comparing
 -- version: api (the API number), logs (open_log and the shared log folder),
 -- discovery (declared addon entries), jit_budget (the shared LuaJIT code cache),
--- health (the health report) and after_startup (callbacks run once every module
--- has started). Whether a feature worked this session shows in its own field:
--- discovery, jit.managed, log_directory. Read-only: assigning a field raises.
+-- health (the health report), after_startup (callbacks run once every module
+-- has started) and build_gate (no addon starts on a game build this release does
+-- not support). Whether a feature worked this session shows in its own field:
+-- discovery, jit.managed, log_directory, build. Read-only: assigning a field raises.
 -- The fields are looked up through the metatable, so pairs() sees none of them.
 local capabilities = {api = 1, logs = true, discovery = addon_discovery ~= nil, jit_budget = jit_budget ~= nil,
-                      health = loader_health ~= nil, after_startup = true}
+                      health = loader_health ~= nil, after_startup = true, build_gate = build_gate ~= nil}
 state.capabilities = setmetatable({}, {__index = capabilities, __metatable = false,
     __newindex = function() error('CowboyBingusModLoader.capabilities is read-only', 2) end})
 
@@ -347,6 +348,33 @@ local function run_startup_callbacks()
     callbacks.summary = 'After startup: ' .. ran .. (ran == 1 and ' callback' or ' callbacks') .. ' run, '
         .. failed .. ' failed'
     write_log()
+end
+
+-- The build gate (src/build_gate.lua with the shared runtime and this release's
+-- supported builds, embedded by the builder in this lexical scope). It runs before
+-- anything optional. On a build this release does not list, or when the check
+-- cannot run for any reason (no gate, no FFI, an error), the loader starts nothing:
+-- no JIT cache limits or churn guard, no discovery, no crash-dump scan, no addon
+-- (registry or discovered) and no after_startup callback. The stock Wwise
+-- callbacks have already run. Nothing overrides this: no setting, file or variable.
+local build = {supported = false, reason = 'build check unavailable', exe_sha256 = 'unavailable',
+               game_sha256 = 'unavailable'}
+if build_gate then
+    local ok, checked = pcall(build_gate.check)
+    if ok and type(checked) == 'table' then
+        build = checked
+    else
+        build.reason = 'build check failed: ' .. error_text(checked)
+    end
+end
+state.build = build
+if build.supported ~= true then
+    local line = 'Game build not supported by this loader; no mods started (' .. tostring(build.reason)
+        .. '; executable ' .. tostring(build.exe_sha256) .. ', game.dll ' .. tostring(build.game_sha256) .. ')'
+    header[#header + 1] = line
+    pcall(print, '[BingusSharedLoader] ' .. line)
+    write_log()
+    do return end
 end
 
 -- The queue runs at startup and on rare later registrations: compiled, its loop

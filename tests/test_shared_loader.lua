@@ -1,4 +1,6 @@
 local source, build = assert(arg[1]), assert(arg[2])
+-- The supported game build, as the build gate sees it (tests/test_build_gate.lua covers the others).
+local fixture = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua')
 local names = {'mods/cowboybingus/better_stratagem_bounce', 'mods/cowboybingus/hellpod_steering_unlocked',
                'mods/cowboybingus/wide_angle_stratagems', 'mods/cowboybingus/reinforcement_beacon_fix_data',
                'mods/cowboybingus/consistent_vaulting', 'mods/cowboybingus/shallow_water_dive',
@@ -69,6 +71,7 @@ for _, audio in ipairs({false, true}) do
             end
             return required(name)
         end
+        fixture.known(env)
         env.init()
         assert(env.CowboyBingusModLoader.version == 17 and env.CowboyBingusModLoader.api == 1)
         local previous = env.update
@@ -100,6 +103,7 @@ for _, audio in ipairs({false, true}) do
   end
 end
 local env = environment(false)
+env.build_gate = fixture.supported_gate()
 execute(source .. '/shared_loader.lua', env)
 assert(env.CowboyBingusModLoader.modules[names[1]]:find('lookup failed', 1, true))
 
@@ -125,6 +129,7 @@ do
         assert(name == 'core/wwise/lua/wwise_visualization' or name == 'core/wwise/lua/wwise_bank_reference')
         return {}
     end
+    fixture.known(env)
     env.init()
     assert(events[1] == 'limits maxmcode=65536 maxtrace=8000' and events[2] == 'watch trace', events[1])
     assert(events[3] == 'module' and #events == 3)
@@ -135,7 +140,7 @@ end
 
 -- Capabilities: what this build supports, for mods to test instead of comparing
 -- version. The built coordinator has them all, the bare source only api, logs and
--- after_startup.
+-- after_startup (without a gate it also starts nothing).
 -- They say what is supported, not how it went this session (here the cache is
 -- unmanaged and discovery fails). Read-only, and looked up through the metatable.
 do
@@ -150,11 +155,13 @@ do
         assert(name == 'core/wwise/lua/wwise_visualization' or name == 'core/wwise/lua/wwise_bank_reference')
         return {}
     end
+    fixture.known(env)
     env.init()
     local loader = env.CowboyBingusModLoader
     local built = loader.capabilities
     assert(built.api == 1 and built.logs == true and built.discovery == true and built.jit_budget == true
-        and built.health == true and built.after_startup == true)
+        and built.health == true and built.after_startup == true and built.build_gate == true)
+    assert(loader.build.supported == true, 'build gate')
     assert(loader.jit.managed == false and loader.discovery:find('^failed: '), 'status and capability mixed up')
     assert(not pcall(function() built.health = false end) and built.health == true, 'capabilities writable')
     assert(not pcall(function() built.extra = true end) and built.extra == nil, 'capabilities extendable')
@@ -164,6 +171,7 @@ do
     execute(source .. '/shared_loader.lua', bare)
     local direct = bare.CowboyBingusModLoader.capabilities
     assert(direct.api == 1 and direct.logs == true and direct.discovery == false and direct.jit_budget == false
-        and direct.health == false and direct.after_startup == true)
+        and direct.health == false and direct.after_startup == true and direct.build_gate == false)
+    assert(bare.CowboyBingusModLoader.build.supported == false and next(bare.CowboyBingusModLoader.modules) == nil)
 end
 print('PASS: shared coordinator covers all 16384 mod combinations, lookup/module failure isolation, duplicate loads, update returns, original audio callbacks, the shared LuaJIT cache start order and read-only capabilities')

@@ -19,8 +19,8 @@ CALLBACK_PATH = 'core/wwise/lua/wwise_flow_callbacks'
 # while no played build is pinned. Only scripts/pin_tested.py writes it, from a
 # clean TestHarness run that deployed the release ZIP holding that resource;
 # runtime_verified is true only for it.
-# Pinned by scripts/pin_tested.py from TestHarness run 20261017-212814-packages.
-TESTED_CALLBACK_SHA = 'F0C938AAE338397C33AB5AED5268CD68C31A47B3403ADF6341C5ECACADDE1F77'
+# Pinned by scripts/pin_tested.py from TestHarness run 20261018-011256-packages.
+TESTED_CALLBACK_SHA = '85CCEE7849195BF06F7D8FC1EF61177ED3D16C4DD95062B21DCDC7D25C22B414'
 
 
 def run(args, **kwargs):
@@ -60,6 +60,41 @@ def probe_coordinator(coordinator):
     return coordinator
 
 
+# Bingus Shared Runtime v1 files (github.com/CowboyBingus/BingusSharedRuntime), vendored
+# byte-identical for the build gate; never edit a copy. The loader only reads module
+# files, so it never vendors bingus_write.lua.
+VENDORED = {
+    'src/bingus_runtime.lua': 'C4450F555F697E583916D18F876412CA96F6963EB1BF4CDAD451EBB906C2F988',
+    'src/bingus_memory.lua': '3973924B1C009CC4E6C863A4EAF87F166899A16DDCB579C3D77AB5465172B416',
+}
+
+
+def vendored(relative):
+    """A vendored runtime file's text, after checking it is the pinned copy."""
+    data = (ROOT / relative).read_bytes()
+    if sha(data) != VENDORED[relative]:
+        raise ValueError(f'{relative} differs from its Bingus Shared Runtime copy (SHA-256 {sha(data)})')
+    return data.decode('utf-8')
+
+
+def build_gate():
+    """The build gate chunk: src/build_gate.lua over the vendored runtime and this release's
+    supported build. The runtime's require is the builtin one, never a game resource; the
+    pins are locals, so nothing outside the resource can change them."""
+    return ('local build_gate = (function(require)\n'
+            'local bingus_runtime = (function()\n' + vendored('src/bingus_runtime.lua') + '\nend)()\n'
+            'local bingus_memory = (function()\n' + vendored('src/bingus_memory.lua') + '\nend)()\n'
+            'local gate = (function()\n' + (ROOT / 'src/build_gate.lua').read_text(encoding='utf-8') + '\nend)()\n'
+            f"local builds = {{{{exe_sha256 = '{EXE_SHA}', game_sha256 = '{GAME_DLL_SHA}'}}}}\n"
+            'return {check = function() return gate.check(bingus_runtime, bingus_memory, builds) end}\n'
+            'end)(function(name)\n'
+            '    local loaded = package and package.loaded and package.loaded[name]\n'
+            '    if loaded then return loaded end\n'
+            "    if not (package and package.preload and package.preload[name]) then error(name .. ' builtin unavailable', 0) end\n"
+            '    return require(name)\n'
+            'end)\n')
+
+
 def bootstrap(stock_bytes, probe=False):
     literal = '"' + ''.join(f'\\{byte:03d}' for byte in stock_bytes) + '"'
     discovery = (ROOT / 'src/discover.lua').read_text(encoding='utf-8')
@@ -76,6 +111,7 @@ def bootstrap(stock_bytes, probe=False):
     # runtime error propagates: native initialization must never be retried.
     # discover.lua and health.lua turn the JIT off for the function each runs in: keep their wrappers.
     return ('local function initialize_addons()\n'
+            + build_gate() +
             'local addon_discovery = (function()\n' + discovery + '\nend)()\n'
             'local jit_guard = (function()\n' + churn_guard + '\nend)()\n'
             'local jit_budget = (function()\n' + budget + '\nend)()\n'
@@ -112,7 +148,11 @@ def compile_resource(callback, folder, probe=False):
 
 def release_tests(folder, env):
     """The suites that pin the release resource built in folder: its log, contract and pin."""
-    tests = run([LUA, ROOT / 'tests/test_shared_loader.lua', ROOT / 'src', folder], env=env)
+    # The build gate: unknown builds and failed checks start nothing; the supported build shares its hashes.
+    tests = run([LUA, ROOT / 'tests/test_build_gate.lua', ROOT / 'src', folder], env=env)
+    tests += run([sys.executable, ROOT / 'tests/game_lua.py', ROOT / 'tests/test_build_gate.lua', ROOT / 'src', folder],
+                 env=env)
+    tests += run([LUA, ROOT / 'tests/test_shared_loader.lua', ROOT / 'src', folder], env=env)
     tests += run([LUA, ROOT / 'tests/test_health.lua', ROOT / 'src', folder], env=env)
     tests += run([LUA, ROOT / 'tests/test_after_startup.lua', ROOT / 'src', folder], env=env)
     tests += run([sys.executable, ROOT / 'tests/game_lua.py', ROOT / 'tests/test_health.lua', ROOT / 'src', folder],

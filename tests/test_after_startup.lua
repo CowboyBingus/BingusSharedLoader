@@ -6,6 +6,7 @@
 -- build/after-startup-test-*.
 local source, build = assert(arg[1]), assert(arg[2])
 local ffi = require('ffi')
+local fixture = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua')
 
 local passed = 0
 local function check(name, condition, detail)
@@ -80,7 +81,10 @@ local function startup(modules, options)
         return true
     end
     run.env = env
+    -- The supported game build, as the build gate sees it.
+    fixture.known(env)
     if options.coordinator == 'bare' then
+        env.build_gate = fixture.supported_gate()
         execute(source .. '/shared_loader.lua', env)
     else
         execute(build .. '/vanilla-boot.ljbc', env)

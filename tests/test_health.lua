@@ -4,6 +4,7 @@
 -- game's own lua51.dll (tests/game_lua.py). Files go to build/health-test-*.
 local source, build = assert(arg[1]), assert(arg[2])
 local ffi = require('ffi')
+local fixture = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua')
 local health = dofile(source .. '/health.lua')
 local floor = math.floor
 
@@ -452,6 +453,7 @@ local function startup(root)
     execute(build .. '/vanilla-boot.ljbc')
     local original_update, original_shutdown = function() end, env.shutdown
     env.update = original_update
+    fixture.known(env)  -- the supported game build, as the build gate sees it
     env.init()
     local text = assert(read(logs .. '/BingusSharedLoader.log'), 'no loader log')
     local lines = {}

@@ -1,5 +1,6 @@
 local base, source = assert(arg[1]):gsub('\\', '/'), assert(arg[2]):gsub('\\', '/')
 local ffi, bit = require('ffi'), require('bit')
+local fixture = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua')
 local resources = dofile(base .. '/resources.lua')
 -- The archive holding the hidden copy of Example_2, and the positions of that
 -- copy's envelope and body: the unreadable_* runs make a read starting there fail.
@@ -94,6 +95,7 @@ for _, mode in ipairs({'normal', 'unreadable_envelope', 'unreadable_body', 'noff
     local calls, order, scans = {}, {}, 0
     local native_ffi = setmetatable({}, {__index = ffi})
     native_ffi.load = function(name)
+        if name == 'bcrypt' then return ffi.load(name) end  -- the build gate's module hashes
         assert(name == 'kernel32')
         local kernel = ffi.load(name)
         -- The loader declares its Windows functions under private bsl_ names.
@@ -112,7 +114,10 @@ for _, mode in ipairs({'normal', 'unreadable_envelope', 'unreadable_body', 'noff
     local env = setmetatable({print = function() end, os = {getenv = function(name)
             if name == 'LOCALAPPDATA' then return localappdata end
         end}, io = fail_at and failing_io(fail_at) or io,
-        package = {loaded = mode == 'noffi' and {} or {ffi = native_ffi, bit = bit}, preload = {}},
+        package = {loaded = mode == 'noffi' and {} or {ffi = fixture.library(native_ffi), bit = bit}, preload = {}},
+        -- The supported game build, as the build gate sees it (noffi: the gate cannot run).
+        BingusRuntime = {hashes = {[fixture.key(fixture.EXE_PATH)] = fixture.EXE_SHA256,
+                                   [fixture.key(fixture.GAME_PATH)] = fixture.GAME_SHA256}},
         stock_error = mode == 'stock_error',
         HD2ModLoader = {modules = {[owned] = 'loaded', [pending] = 'loading'}},
         stingray = {Application = {can_get = function(kind, name)
@@ -145,6 +150,16 @@ for _, mode in ipairs({'normal', 'unreadable_envelope', 'unreadable_body', 'noff
         end
         results(startup('argument', nil, 'last'))
         assert(env.stock_calls == 1 and env.CowboyBingusModLoader.api == 1)
+    end
+    if mode == 'noffi' then
+        -- Without the FFI the build cannot be checked: the stock startup ran, and nothing else.
+        local state = env.CowboyBingusModLoader
+        assert(state.build.supported == false and state.build.reason == 'build check failed: ffi builtin unavailable',
+            state.build.reason)
+        assert(#order == 0 and scans == 0 and next(state.modules) == nil and state.discovery == nil)
+        assert(env.after_startup_calls == nil)
+    elseif mode ~= 'stock_error' then
+        assert(env.CowboyBingusModLoader.build.supported == true)
         check_after_startup(env, discovers)
         assert(order[1] == legacy and order[2] == bounce, 'Legacy order changed')
         assert(calls[legacy] == 1 and calls[bounce] == 1)
@@ -170,4 +185,4 @@ for _, mode in ipairs({'normal', 'unreadable_envelope', 'unreadable_body', 'noff
         assert(calls[legacy] == 1 and calls[bounce] == 1)
     end
 end
-print('PASS: compiled bootstrap, real Windows enumeration, independent addon packages, legacy order, API 1, failure/reentry isolation, dispatcher coexistence, stock arguments/results, used, hidden and not started copies in the log, unreadable hidden copies change nothing else, and after_startup callbacks from registry and discovered entries (' .. jit.version .. ')')
+print('PASS: compiled bootstrap, real Windows enumeration, independent addon packages, legacy order, API 1, failure/reentry isolation, dispatcher coexistence, stock arguments/results, used, hidden and not started copies in the log, unreadable hidden copies change nothing else, and after_startup callbacks from registry and discovered entries; nothing starts when the build cannot be checked (' .. jit.version .. ')')

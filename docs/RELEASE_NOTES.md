@@ -1,3 +1,7 @@
+- On a game build this loader does not support, it starts no mods at all, third-party ones included, and logs both game hashes; mods return with a loader release for the new build.
+- When the build cannot be checked, for example because a game file cannot be read, the loader also starts no mods; the game's own audio startup still runs, and no setting or file turns the check off.
+- New `CowboyBingusModLoader.build` holds the result and `capabilities.build_gate` says the loader has the check; mods that check the build themselves reuse the loader's game hashes instead of reading the files again.
+- The author guide's "Startup and compatibility" section explains what happens after a game update and why mods should keep their own build check.
 - New LuaJIT churn guard: when more than 64 places in the game's or mods' code keep failing to compile, LuaJIT retries them all session; the loader now lets LuaJIT stop trying each one, as it would with room to remember it.
 - In game with Vanilla Plus Megapack v42, places retried after being pushed out of LuaJIT's list fell from 13-36 per 2 minutes to 0.
 - With 100 extra failing places in game, the wasted compile attempts cost 0.007 ms per frame instead of 0.028-0.035 ms, nearly all of it in the first 30 seconds.

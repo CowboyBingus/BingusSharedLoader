@@ -15,6 +15,8 @@ P.flush_seconds = 5
 local quiet_os = setmetatable({getenv = function() return nil end}, {__index = os})
 local env = setmetatable({print = function() end, os = quiet_os}, {__index = _G})
 env._G = env
+-- The source runs as the supported game build (tests/test_build_gate.lua covers the others).
+env.build_gate = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua').supported_gate()
 local names = {['mods/cowboybingus/consistent_vaulting'] = 'a', ['mods/cowboybingus/shallow_water_dive'] = 'b',
     ['mods/cowboybingus/sentry_aim_retention'] = 'c'}
 env.stingray = {Application = {can_get = function(kind, name) return kind == 'lua' and names[name] ~= nil end}}
@@ -190,7 +192,8 @@ do
     emit('running', state.health.header)
     assert(state.health.header[1]:find('Development build loader-v20-probe4: frame probe schema 4 running', 1, true))
     local failing = setmetatable({print = function() end, os = quiet_os, update = function() end,
-        stingray = env.stingray, require = function() return true end, frame_probe = {start = function() error('No performance counter') end}},
+        stingray = env.stingray, require = function() return true end, frame_probe = {start = function() error('No performance counter') end},
+        build_gate = env.build_gate},
         {__index = _G})
     failing._G = failing
     setfenv(assert(loadfile(coordinator)), failing)()

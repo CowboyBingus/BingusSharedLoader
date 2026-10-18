@@ -62,6 +62,40 @@ start your addon. A ZIP directory named `mods/...` alone is not a game resource.
 
 ## Startup and compatibility
 
+### Supported game builds (v20)
+
+Each loader release supports the game builds it lists: the SHA-256 of
+`helldivers2.exe` and `game.dll`. From v20, on any other build the loader starts
+no addon at all, third-party ones included: no registry module, no discovered
+entry, no `after_startup` callback. The same happens when the check cannot run
+(no built-in FFI, a module file that cannot be read): the loader fails closed.
+The game's own Wwise startup still runs, and the log and the console get one
+line with both hashes:
+
+```text
+Game build not supported by this loader; no mods started (unsupported game build; executable <SHA-256>, game.dll <SHA-256>)
+```
+
+There is no override: no setting, file or environment variable starts addons on
+a build the release does not list.
+
+- **After a game update** every addon stays off until a loader release adds the
+  new build. Your mod needs no change for that, but test it on the new build
+  once that loader is out.
+- **Keep your own build check.** Players on an older loader (v19 or before)
+  start your mod on any build, so a mod that depends on game memory or game
+  functions should still compare the hashes itself and do nothing on a
+  mismatch. With Bingus Shared Runtime's `verify_build`, the loader has already
+  put both hashes in `BingusRuntime.hashes`, so your check reads no file.
+- `CowboyBingusModLoader.build` holds the result: `{supported = true,
+  exe_sha256, game_sha256}`, or `{supported = false, reason, exe_sha256,
+  game_sha256}` (a hash reads `unavailable` when it could not be read).
+  `capabilities.build_gate` says the loader has the gate.
+- The gate covers only addons this loader starts. A mod with its own start
+  route (its own boot or Wwise replacement) is outside it.
+
+### Startup order
+
 Discovery reads deployed `data/9ba626afa44a3aa3.patch_<number>` files once, using
 the game executable's location rather than the working directory. It ignores
 sidecars and directories. Higher numeric patch indices win; an unmarked
@@ -71,7 +105,9 @@ Only explicitly declared entries with matching hashes become startup candidates.
 Startup runs in this order:
 
 1. The original Wwise startup.
-2. The loader's registry, always in this order:
+2. The build gate (v20, [above](#supported-game-builds-v20)). On a build the
+   release does not list, startup ends here.
+3. The loader's registry, always in this order:
 
    ```text
    mods/cowboybingus/vanilla_plus_megapack
@@ -90,7 +126,7 @@ Startup runs in this order:
    mods/cowboybingus/armory_preview_cache
    ```
 
-3. Discovered entries, archive by archive from the highest patch number to the
+4. Discovered entries, archive by archive from the highest patch number to the
    lowest, and within one archive in the order of its resource table (the
    helper sorts that table by resource hash, not by name).
 
@@ -109,8 +145,10 @@ merging the two state tables. In-progress entries remain `loading`.
 Check `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs/BingusSharedLoader.log` for the
 discovery result and each module's status. From v19 each loaded module also gets
 a `changes` line listing the globals, library functions, metatables and
-collector or JIT settings it changed while loading; keep that line short. Missing built-in FFI or failed
-enumeration falls back to the legacy registry. Discovery never executes raw
+collector or JIT settings it changed while loading; keep that line short. Failed
+enumeration falls back to the legacy registry. Without the built-in FFI, v19 and
+older also fell back to it; from v20 the build cannot be checked then, so no
+addon starts. Discovery never executes raw
 archive contents; the game's availability check and `require` load the winner.
 
 Manager resource-conflict handling is unchanged. Discovery does not detect
@@ -170,6 +208,7 @@ end
 | `jit_budget` | the shared LuaJIT code cache limits and `loader.jit` |
 | `health` | the health report in the log and in `loader.health` |
 | `after_startup` | `loader.after_startup(fn)`, [below](#running-code-once-every-mod-has-started) |
+| `build_gate` | v20: no addon starts on an unsupported game build; the result is in `loader.build` ([above](#supported-game-builds-v20)) |
 
 Without the table the loader is v18 or older; test the fields themselves:
 `type(loader.open_log) == 'function'` for logs, `type(loader.discovery) ==

@@ -93,6 +93,70 @@ The helper returns a writable file or nil. Missing environment variables, unavai
 
 The focused logging suite covers existing directories, setup failures, file-open failures and one-time initialization. A native Windows filesystem smoke check also verifies actual directory creation without attaching to the game.
 
+## Build gate (v20)
+
+On a game build the release does not list, the loader starts no addon, third-party
+ones included. The reason: the effect of a game change, a new anti-cheat included,
+is unknown, and an addon cannot be assumed to check the build itself. The loader is
+the one place that can stop every addon it starts.
+
+**Design.**
+
+- The builder embeds `src/build_gate.lua` in the coordinator's scope, together with
+  byte-identical copies of Bingus Shared Runtime's `bingus_runtime.lua` and
+  `bingus_memory.lua` (`src/`, pinned by SHA-256 in `scripts/build.py`) and the
+  supported pair from `scripts/archive.py` (`EXE_SHA`, `GAME_DLL_SHA`). The pins are
+  locals of the compiled resource: nothing outside it can change them.
+- The runtime's `require` is the builtin lookup the loader uses (`package.loaded`, then
+  `package.preload`), never a game resource of the same name.
+- `gate.check` calls `memory.new(runtime)` and `verify_build` for each listed pair.
+  `verify_build` hashes `helldivers2.exe` and `game.dll` (SHA-256 of the module files)
+  and keeps both in `BingusRuntime.hashes`, the table every runtime copy shares. A mod
+  that checks the build afterwards reads them from there and opens no file.
+- The FFI names are the runtime's private, versioned `bingus_memory1_*` names. The
+  loader now runs before every mod, so its declaration is the first in the game; it is
+  the canonical v1 text that every mod's copy declares, so nothing changes for them.
+  The loader's own `bsl_*` names and the v18 plain declarations are unchanged.
+- Placement: after log setup (the log folder and the `Started:` line), before
+  everything optional. On a supported build the coordinator continues exactly as
+  before, with the same log.
+- Anything else fails closed: an unlisted pair, no `game.dll`, no FFI, a module file
+  that cannot be read, a gate that raises or returns something else, or no gate at all
+  (the bare source). The loader then skips the JIT cache limits and churn guard,
+  discovery, the build stamps, the crash-dump scan, every addon start (registry and
+  discovered) and the `after_startup` run. It writes the log once and prints one line:
+  `Game build not supported by this loader; no mods started (<reason>; executable
+  <SHA-256>, game.dll <SHA-256>)`. A hash reads `unavailable` when it could not be
+  read.
+- The stock Wwise callbacks run before the coordinator and are not affected.
+- `CowboyBingusModLoader.build` holds `{supported, reason, exe_sha256, game_sha256}`;
+  `capabilities.build_gate` is true in every built resource.
+- No override: no setting, file or environment variable starts addons on an unlisted
+  build. A switch players can flip would bring the risk back.
+
+**Limits.** The gate covers only addons this loader starts. A mod with its own start
+route (its own boot or Wwise replacement, or one started by another loader) is outside
+it. The loader's own Wwise override stays installed. It protects only players who have
+a gated loader installed before a game update. After every update all addons stay off
+until a loader release adds the new build.
+
+**Cost.** Startup only; nothing per frame, idle or active.
+
+- Supported build: two module hashes (`GetModuleFileNameW`, `CreateFileW`, `ReadFile`,
+  BCrypt SHA-256 over about 15 MB each). The first gated mod paid them before, so a
+  session with any gated mod does the same total work; with only third-party addons it
+  is two more hashes per session. Unmeasured in game.
+- Unsupported build: the same two hashes at most, then less work than before (no
+  discovery, no dump scan, no mod).
+- Compiled code: the runtime's file-read loop may compile once, as it did for the first
+  gated mod. Check with `jit_cache.py`.
+
+Tests: `tests/test_build_gate.lua`, in the workspace LuaJIT and the game's `lua51.dll`,
+runs the built resource on the supported build, on unknown builds (other hashes, and
+two real files hashed) and with every failing check. An unknown build cannot be
+produced in game, so this test is its proof. `tests/build_fixture.lua` gives the other
+suites the supported build.
+
 ## Shared LuaJIT code cache (v18)
 
 The game's `bin/lua51.dll` is LuaJIT 2.1.0-alpha (non-GC64) with its default

@@ -84,6 +84,7 @@ if spec.discovery then
     local kernel = setmetatable({GetModuleFileNameA = game_path, bsl_GetModuleFileNameA = game_path},
         {__index = function(_, name) return kernel32[name] end})
     local library = setmetatable({load = function(name)
+        if name == 'bcrypt' then return ffi.load(name) end  -- the build gate's module hashes
         assert(name == 'kernel32', 'unexpected library ' .. tostring(name))
         return kernel
     end}, {__index = ffi})
@@ -106,6 +107,17 @@ if spec.unreadable then
             return file:read(count)
         end, close = function() return file:close() end}
     end}, {__index = io})
+end
+-- Every scenario runs on the supported game build, as the build gate sees it (no_ffi:
+-- the gate cannot run). Older releases have no gate and ignore both.
+do
+    local fixture = dofile(arg[0]:gsub('[%w_]+%.lua$', '') .. 'build_fixture.lua')
+    if not spec.no_ffi then
+        local base = rawget(env, 'package') or package
+        env.package = fixture.package_with(fixture.library(base.loaded.ffi or ffi), base)
+    end
+    env.BingusRuntime = {hashes = {[fixture.key(fixture.EXE_PATH)] = fixture.EXE_SHA256,
+                                   [fixture.key(fixture.GAME_PATH)] = fixture.GAME_SHA256}}
 end
 env.loadstring = function(bytes, label)
     local chunk, reason = loadstring(bytes, label)

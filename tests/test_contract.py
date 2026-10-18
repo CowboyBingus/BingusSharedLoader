@@ -5,7 +5,9 @@ compares the result with tests/fixtures/loader-contract.json, recorded from the
 previous release: the global table's fields and values, module statuses, the
 Windows names declared for other mods and their prototypes, what an addon of
 that release can call, the update chain, printed lines and log statuses. The
-only differences allowed are listed in ADDED_STATE_KEYS, each with its reason.
+only differences allowed are listed in ADDED_STATE_KEYS, ADDED_JIT_KEYS, FIXED
+and GATED, each with its reason. Every scenario runs on the supported game build
+(tests/build_fixture.lua).
 
 Usage: test_contract.py <build>                 compare this build
        test_contract.py <build> --record <ZIP>  record the contract of a release ZIP
@@ -44,6 +46,9 @@ ADDED_STATE_KEYS = {
                           'read-only, so mods test a feature instead of comparing version, which stays 17',
     'health:table': 'v19: the health report data (header lines and per-module changes)',
     'revision:string': 'v19: the build revision, so tools need not compare version numbers',
+    'build:table': 'v20: the build gate\'s result ({supported, reason, exe_sha256, game_sha256}), with the new '
+                   'build_gate capability (capabilities are read through a metatable, so no key here); on the '
+                   'supported build every scenario is otherwise unchanged',
 }
 # Fields added to state.jit (CowboyBingusModLoader.jit), each with its reason.
 ADDED_JIT_KEYS = {
@@ -57,6 +62,30 @@ FIXED = {
                              'one incompatible declaration disabled every mod log for the session; v19 calls its '
                              'private name. The other mods still see the module\'s prototype, as under v18.',
 }
+
+
+# Scenarios where this build deliberately does less than the recorded release, with the
+# reason. The expectation is the recorded contract with exactly this change.
+GATED = {
+    'no_ffi': 'v20 build gate: without the FFI the game build cannot be checked, so the loader fails closed: no '
+              'JIT cache limits, no discovery and no module; it prints one line saying why. The stock Wwise '
+              'callbacks still run.',
+}
+GATE_LINE = ('[BingusSharedLoader] Game build not supported by this loader; no mods started (build check failed: ffi '
+             'builtin unavailable; executable unavailable, game.dll unavailable)')
+
+
+def gated(name, expected):
+    """The recorded contract of a GATED scenario with the build gate's change applied."""
+    expected = json.loads(json.dumps(expected))
+    if name == 'no_ffi':
+        expected['globals_added'] = [key for key in expected['globals_added'] if not key.startswith('Contract_')]
+        expected['prints'] = [GATE_LINE]
+        state = expected['state']
+        state['keys'] = [key for key in state['keys'] if key not in ('discovery:string', 'jit:table')]
+        state['discovery'] = state['jit'] = None
+        state['modules'] = []  # an empty table encodes as a list
+    return expected
 
 
 def repaired(name, expected):
@@ -177,12 +206,15 @@ def main():
         expected = recorded['scenarios'][name]
         if name in FIXED:
             expected = repaired(name, expected)
+        if name in GATED:
+            expected = gated(name, expected)
         problems += [name + ' ' + line for line in differences(expected, actual)]
     if problems:
         raise SystemExit('Contract changed against ' + recorded['release'] + ':\n' + '\n'.join(problems))
     print('PASS: contract unchanged against %s in %d scenarios (fields, statuses, Windows declarations and '
-          'prototypes, addon calls, update chain, prints, log statuses); %d added fields and %d repaired scenario '
-          'as documented' % (recorded['release'], len(SCENARIOS), len(ADDED_STATE_KEYS), len(FIXED)))
+          'prototypes, addon calls, update chain, prints, log statuses); %d added fields, %d repaired scenario and '
+          '%d gated scenario as documented' % (recorded['release'], len(SCENARIOS), len(ADDED_STATE_KEYS), len(FIXED),
+                                               len(GATED)))
 
 
 if __name__ == '__main__':
