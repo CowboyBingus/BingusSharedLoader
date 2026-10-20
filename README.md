@@ -1,21 +1,21 @@
-> Supports Steam build 25480438 / EXE 1.8.46015.0. Tested in game aboard the ship and in a mission.
+> Supports Steam build 25988413 / EXE 1.8.46539.0. Offline builds and package checks pass for this build; live gameplay validation is pending.
 
 ![Bingus Shared Loader](assets/banner.png)
 
 # Bingus Shared Loader
 
 > [!IMPORTANT]
-> **Required dependency for Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v20.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
+> **Required dependency for Armory Preview Cache, Know Your Constellation, Controllable Hover Pack, Vehicle Stability, Enemy Collision Synchronized, Vanilla Plus Megapack or the separate Better Stratagem Bounce, Hellpod Steering Unlocked, Reinforcement Beacons Fixed, Consistent Vaulting, Shallow Water Diving and Sentry Aim Retention mods.** Install with **Arsenal or HD2MM**: import `Bingus-Shared-Loader-v21.zip`, enable it alongside the megapack or your chosen mods, then click **Deploy**. One loader installation supports all your selected mods.
 >
 > **Arsenal (default priority): place Bingus Shared Loader LAST, at the bottom of the load order**, then **Purge / Deploy**. If you enabled first-mod priority, place the loader first instead.
 
-**v20 / API 1** starts no mods on a game build it does not support (see [below](#game-updates)) and adds the LuaJIT churn guard: code that keeps failing to compile is no longer retried all session (see [below](#luajit-churn-guard)). Since v19 the loader starts the game's shared LuaJIT code cache at 64 MB of machine code (see [below](#shared-luajit-code-cache)), lets mods run their setup once after every mod has started (`after_startup`), protects loading, logs and discovery from other mods' changes to Lua builtins and Windows declarations, and writes a fuller startup log. It keeps automatic discovery for declared addon entries, all existing module registrations and shared logging. In two recorded missions of real play the cache never flushed (peak 1,344 KB of machine code). See [mod author instructions](docs/AUTHORING.md). Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
+**v21 / API 1** adds support for Steam build 25988413 and starts no mods on a game build it does not support (see [below](#game-updates)). It keeps the v20 LuaJIT churn guard: code that keeps failing to compile is no longer retried all session (see [below](#luajit-churn-guard)). Since v19 the loader starts the game's shared LuaJIT code cache at 64 MB of machine code (see [below](#shared-luajit-code-cache)), lets mods run their setup once after every mod has started (`after_startup`), protects loading, logs and discovery from other mods' changes to Lua builtins and Windows declarations, and writes a fuller startup log. It keeps automatic discovery for declared addon entries, all existing module registrations and shared logging. In two recorded missions of real play the cache never flushed (peak 1,344 KB of machine code). See [mod author instructions](docs/AUTHORING.md). Current standalone copies may remain installed alongside the pack. shared resource identities and per-mod guards prevent duplicate initialization. The loader remains a separate package.
 
 Starts your installed CowboyBingus mods and supported third-party mods together. The loader has no gameplay effect by itself.
 
-**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v20.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
+**Install:** Close Helldivers 2. Import `Bingus-Shared-Loader-v21.zip` and your chosen gameplay ZIPs into **HDArsenal** or **HD2MM**, enable them, and deploy. Keep the loader enabled while any dependent mod is enabled.
 
-This is **v20 / API 1**, the recommended loader for every CowboyBingus mod (they need v18 or newer). Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged and `CowboyBingusModLoader.version` stays 17, so existing gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). This build passed a clean in-game run to the ship and a mission with every Vanilla Plus Megapack v42 option.
+This is **v21 / API 1**, the recommended loader for every CowboyBingus mod (they need v18 or newer). Replace the previous loader entry, then **Purge / Deploy**. The manager GUID and runtime API marker are unchanged and `CowboyBingusModLoader.version` stays 17, so existing gameplay packages remain compatible. Do not install old and new loader copies together. See [installation](INSTALL.txt). Offline checks pass for this build; a clean in-game run on it is still to be recorded, so the release reports `runtime_verified: false`.
 
 ## Game updates
 
@@ -65,7 +65,7 @@ The overlay keeps its own configuration and defaults. Its optional `HUDBTO.ini` 
 
 The maintainer confirmed v3 works in-game with the v2 overlay linked in [technical notes](docs/TECHNICAL.md). Offline checks also cover startup, configuration reads and callback forwarding with HUD+ and the gameplay modules. Future releases need revalidation if their startup changes. Other startup replacements can still conflict. this loader does not merge arbitrary scripts.
 
-Supported: Steam build **25480438** / EXE **1.8.46015.0**. Callback preservation, missing-module behavior and manager deployment are checked independently of each gameplay mod's behavior.
+Supported: Steam build **25988413** / EXE **1.8.46539.0**. Callback preservation, missing-module behavior and manager deployment are checked independently of each gameplay mod's behavior.
 
 Loader v14 creates `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs` for its own log and all updated CowboyBingus mod logs. Each mod retains its existing filename.
 
@@ -80,7 +80,7 @@ Loader v14 creates `%LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs` for its own lo
 
 **AI disclosure:** GPT-6 Astra assisted with research, implementation, debugging, documentation and artwork; Claude Opus 5.5 assisted with research, implementation, tests and documentation.
 
-Current version: **v20**, for game build **25480438**. See [changes](CHANGELOG.md) and [validation coverage](docs/MIGRATION_VALIDATION.md).
+Current version: **v21**, for game build **25988413**. See [changes](CHANGELOG.md) and [validation coverage](docs/MIGRATION_VALIDATION.md).
 
 ## License
 

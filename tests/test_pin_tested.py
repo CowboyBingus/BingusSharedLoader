@@ -45,7 +45,7 @@ def clean_record(name, digest):
             'exit': {'at': '2026-10-04T00:15:05-07:00', 'code': 0, 'how': 'quit'}, 'outcome': 'clean-quit',
             'clean': True, 'not_clean_because': [], 'reached_ship': '2026-10-04T00:15:00-07:00', 'agent_bye': True,
             'dumps': [], 'logs': ['BingusSharedLoader.log'], 'restore_problems': [],
-            'facts': {'build': '25480438', 'exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
+            'facts': {'build': '25988413', 'exe_sha256': EXE_SHA, 'game_dll_sha256': GAME_DLL_SHA,
                       'packages': ['Other-Mod-v1.zip', name],
                       'package_sha256': {'Other-Mod-v1.zip': '0' * 64, name: digest}}}
 

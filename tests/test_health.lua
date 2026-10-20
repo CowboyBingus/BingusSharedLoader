@@ -487,7 +487,7 @@ do
     local path = ffi.new('char[32768]')
     local exe = health.hex(file_stamp(ffi.string(path, kernel.GetModuleFileNameA(nil, path, 32768))))
     local expected = {
-        '^Bingus Shared Loader loader%-v20; API 1$',
+        '^Bingus Shared Loader loader%-v21; API 1$',
         '^Started: %d%d%d%d%-%d%d%-%d%d %d%d:%d%d:%d%d$',
         '^Game build stamps: executable ' .. exe .. ', game%.dll unknown$',
         '^Lua at start: heap %d+ KB, GC pause ' .. pause_before .. ', GC step multiplier %d+, JIT on$',
@@ -540,7 +540,7 @@ do
     string.bslt_extra, getmetatable('').__bslt = nil, nil
     local started = lines[2]:match('^Started: (.+)$')
     check('previous session finished', run.lines[5] == 'Previous session: started ' .. started
-        .. ' (loader-v20); startup finished: 2 loaded, 1 failed', run.lines[5])
+        .. ' (loader-v21); startup finished: 2 loaded, 1 failed', run.lines[5])
 end
 
 -- 8. Kept out of the JIT ---------------------------------------------------------------

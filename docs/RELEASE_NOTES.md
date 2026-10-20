@@ -1,3 +1,6 @@
+- Support Steam build 25988413 / EXE 1.8.46539.0 with updated game fingerprints.
+- Preserve API 1, addon discovery, the shared log folder, the LuaJIT code cache, the churn guard and the original audio callbacks.
+- Offline builds and package checks pass; live gameplay validation remains pending.
 - On a game build this loader does not support, it starts no mods at all, third-party ones included, and logs both game hashes; mods return with a loader release for the new build.
 - When the build cannot be checked, for example because a game file cannot be read, the loader also starts no mods; the game's own audio startup still runs, and no setting or file turns the check off.
 - New `CowboyBingusModLoader.build` holds the result and `capabilities.build_gate` says the loader has the check; mods that check the build themselves reuse the loader's game hashes instead of reading the files again.

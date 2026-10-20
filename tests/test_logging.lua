@@ -32,7 +32,7 @@ local function run(kind)
     -- The fixture loaded the real ffi in this process: the loader's builtin lookup must reach the fake.
     env.package={loaded={},preload={ffi=function()end}}
     setfenv(assert(loadfile(source..'/shared_loader.lua')),env)()
-    local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1 and state.revision=='loader-v20')
+    local state=env.CowboyBingusModLoader;assert(state.version==17 and state.api==1 and state.revision=='loader-v21')
     -- The loader's own Windows functions are declared once, under private names
     -- only: a plain name would bind to whichever prototype another mod declared
     -- first. Then, as in v18, the plain log pair once for other mods, only with

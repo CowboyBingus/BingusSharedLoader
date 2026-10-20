@@ -212,7 +212,7 @@ local function check_refused(label, run, reason, exe, game, has_log)
     if has_log then
         -- The bare source has no health report, so no Started line.
         local started = run.bare and 0 or 1
-        check(label .. ': log', lines and #lines == 2 + started and lines[1] == 'Bingus Shared Loader loader-v20; API 1'
+        check(label .. ': log', lines and #lines == 2 + started and lines[1] == 'Bingus Shared Loader loader-v21; API 1'
             and (started == 0 or lines[2]:find('^Started: ')) and lines[2 + started] == line,
             lines and table.concat(lines, ' | '))
     else

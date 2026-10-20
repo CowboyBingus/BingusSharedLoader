@@ -19,8 +19,9 @@ CALLBACK_PATH = 'core/wwise/lua/wwise_flow_callbacks'
 # while no played build is pinned. Only scripts/pin_tested.py writes it, from a
 # clean TestHarness run that deployed the release ZIP holding that resource;
 # runtime_verified is true only for it.
-# Pinned by scripts/pin_tested.py from TestHarness run 20261018-011256-packages.
-TESTED_CALLBACK_SHA = '85CCEE7849195BF06F7D8FC1EF61177ED3D16C4DD95062B21DCDC7D25C22B414'
+# Cleared for v21: the resource changed with the supported game build, so nothing is
+# pinned until a clean run plays this build.
+TESTED_CALLBACK_SHA = None
 
 
 def run(args, **kwargs):
@@ -33,7 +34,7 @@ def run(args, **kwargs):
 # Development-only variant, never published: --probe embeds src/frame_probe.lua. Its hooks
 # are inserted into the coordinator text here, so the public build's sources and resource
 # stay as they are.
-PROBE_REVISION = 'loader-v20-probe4'
+PROBE_REVISION = 'loader-v21-probe4'
 PROBE_HOOKS = [
     # Before the first module starts: the probe wraps the game's update and render,
     # and the loader log names the probe on its second line (the study checks the first).
@@ -180,13 +181,13 @@ def probe_tests(folder, env):
 
 def main():
     # --probe builds the development-only frame probe loader into build-probe/; never publish it.
-    # --dev NAME (e.g. jitguard1) builds the release sources as revision loader-v20-NAME into
+    # --dev NAME (e.g. jitguard1) builds the release sources as revision loader-v21-NAME into
     # build-<NAME without its number>/, ZIP included, for harness runs; never publish it.
     probe = '--probe' in sys.argv[1:]
     dev = sys.argv[sys.argv.index('--dev') + 1] if '--dev' in sys.argv[1:] else None
-    BUILD, revision = (ROOT / 'build-probe', PROBE_REVISION) if probe else (ROOT / 'build', 'loader-v20')
+    BUILD, revision = (ROOT / 'build-probe', PROBE_REVISION) if probe else (ROOT / 'build', 'loader-v21')
     if dev:
-        BUILD, revision = ROOT / ('build-' + dev.rstrip('0123456789')), 'loader-v20-' + dev
+        BUILD, revision = ROOT / ('build-' + dev.rstrip('0123456789')), 'loader-v21-' + dev
     BUILD.mkdir(exist_ok=True)
     boot, callback = vanilla_inputs()
     (BUILD / 'vanilla-boot.ljbc').write_bytes(boot[8:])

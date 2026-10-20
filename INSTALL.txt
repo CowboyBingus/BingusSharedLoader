@@ -1,4 +1,10 @@
-Supports Steam build 25480438 / EXE 1.8.46015.0. Tested in game aboard the ship and in a mission.
+Supports Steam build 25988413 / EXE 1.8.46539.0. Offline builds and package
+checks pass for this build; live gameplay validation is pending.
+
+v21: adds support for Steam build 25988413 with new game fingerprints. It keeps
+the v20 LuaJIT churn guard, the shared code cache, after_startup, discovery and
+the build gate. Nothing is pinned as played yet, so the release reports
+runtime_verified: false until a clean in-game run is recorded.
 
 v20: adds the LuaJIT churn guard, so code that keeps failing to compile is no
 longer retried all session; the loader log shows a "LuaJIT churn:" line.
@@ -14,7 +20,7 @@ Logs: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs
 
 
 
-Bingus Shared Loader - v20
+Bingus Shared Loader - v21
 
 
 
@@ -28,7 +34,7 @@ Sentry Aim Retention, Enemy Collision Synchronized, Vehicle Stability, and Contr
 
 Install with Arsenal or HD2MM: import
 
-Bingus-Shared-Loader-v20.zip, enable it alongside your chosen mods, then click Deploy.
+Bingus-Shared-Loader-v21.zip, enable it alongside your chosen mods, then click Deploy.
 
 One loader installation supports all your selected mods.
 
@@ -46,7 +52,7 @@ instead. Purge and Deploy after reordering.
 
 Formerly named Shared Mod Loader.
 
-Supported: Steam build 25480438 / EXE 1.8.46015.0.
+Supported: Steam build 25988413 / EXE 1.8.46539.0.
 
 
 
@@ -56,7 +62,7 @@ Supported: Steam build 25480438 / EXE 1.8.46015.0.
 
    in HDArsenal or HD2MM. Use only one manager.
 
-3. Import Bingus-Shared-Loader-v20.zip and Vanilla-Plus-Megapack-v42.zip or your chosen
+3. Import Bingus-Shared-Loader-v21.zip and Vanilla-Plus-Megapack-v42.zip or your chosen
 
    current gameplay module ZIPs. Current standalone copies can remain
 

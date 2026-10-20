@@ -1,3 +1,11 @@
+# v21
+
+- Support Steam build 25988413 / EXE 1.8.46539.0 with updated game fingerprints; the build gate accepts this build and starts no mod on any other.
+- Built from the same pinned vanilla Wwise callbacks and boot resources as v20, so callback preservation, discovery, the shared log folder, the LuaJIT code cache and the churn guard are unchanged.
+- `runtime_verified` is cleared for this release: the loader resource changed with the supported build, so nothing is pinned until a clean run plays it. Offline builds and package checks pass; live gameplay validation remains pending.
+- `revision` now reads `loader-v21`; `CowboyBingusModLoader.version` stays 17, so existing mods see no change.
+- The offline contract check now strips a Windows drive letter from recorded source positions, so the suite also passes when the project sits on an absolute Windows path.
+
 # v20
 
 - On a game build this loader does not support, it starts no mods at all, third-party ones included, and logs both game hashes; mods return with a loader release for the new build.

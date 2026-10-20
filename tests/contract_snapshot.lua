@@ -48,8 +48,10 @@ local escaped_temp = temp:gsub('%p', '%%%0')
 local function normalize(text)
     if type(text) ~= 'string' then return text end
     text = text:gsub(escaped_temp, '<temp>')
-    -- Source positions differ between builds; the messages must not.
-    return (text:gsub('[^%s:]*:%d+: ', ''))
+    -- Source positions differ between builds; the messages must not. A Windows chunk
+    -- name starts with a drive letter, which the plain pattern would leave behind as
+    -- "C:", so strip the whole "C:\...\file.lua:12: " prefix first.
+    return (text:gsub('%a:[^%s:]*:%d+: ', ''):gsub('[^%s:]*:%d+: ', ''))
 end
 
 local prints, addon = {}, {}

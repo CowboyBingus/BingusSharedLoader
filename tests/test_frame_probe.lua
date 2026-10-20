@@ -70,7 +70,7 @@ env.frame_probe = {start = function(state)
 end}
 setfenv(assert(loadfile(coordinator)), env)()
 local state = env.CowboyBingusModLoader
-assert(state.revision == 'loader-v20-probe4', 'Probe revision ' .. tostring(state.revision))
+assert(state.revision == 'loader-v21-probe4', 'Probe revision ' .. tostring(state.revision))
 for name in pairs(names) do assert(state.modules[name] == 'loaded', name .. ' ' .. tostring(state.modules[name])) end
 local probe = assert(state.frame_probe, state.frame_probe_failure)
 -- Layer order follows load order: game, then each mod that changed a global.
@@ -190,7 +190,7 @@ do
         for _, line in ipairs(header) do out:write(outcome, '\t', line, '\n') end
     end
     emit('running', state.health.header)
-    assert(state.health.header[1]:find('Development build loader-v20-probe4: frame probe schema 4 running', 1, true))
+    assert(state.health.header[1]:find('Development build loader-v21-probe4: frame probe schema 4 running', 1, true))
     local failing = setmetatable({print = function() end, os = quiet_os, update = function() end,
         stingray = env.stingray, require = function() return true end, frame_probe = {start = function() error('No performance counter') end},
         build_gate = env.build_gate},

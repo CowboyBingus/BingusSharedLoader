@@ -189,7 +189,7 @@ under v18.
 ## Testing for loader features
 
 `CowboyBingusModLoader.api` remains exactly `1`. The internal `version` does
-not follow the release number (`17` for releases v18 to v20, `16` for v15 to
+not follow the release number (`17` for releases v18 to v21, `16` for v15 to
 v17), so never compare it. From v19, test the read-only `capabilities` table:
 
 ```lua
@@ -218,7 +218,7 @@ session: `loader.discovery` reads `failed: ...` when discovery could not run,
 and `loader.jit.managed` is false when the cache limits could not be raised.
 The table is read-only and assigning a field raises an error. Its fields are
 looked up through its metatable, so `pairs()` lists none of them: test the
-names you need. `revision` (`'loader-v20'`) names the build for logs and tools.
+names you need. `revision` (`'loader-v21'`) names the build for logs and tools.
 Existing globals, module statuses and `open_log` remain.
 
 ## Running code once every mod has started
@@ -284,7 +284,7 @@ the same name is silently ignored, even with a different prototype or layout,
 and every call uses the first one. Defining a `struct`, `union` or `enum` tag a
 second time raises `attempt to redefine`.
 
-For compatibility with mods written for v18, the loader (v18 to v20) declares
+For compatibility with mods written for v18, the loader (v18 to v21) declares
 these six functions under their plain Windows names, with exactly this text:
 
 ```c

@@ -1,7 +1,7 @@
 local state = rawget(_G, 'CowboyBingusModLoader')
 if state then return end
 -- version stays 17, as in v18: mods compare it, and nothing they can rely on changed.
-state = {version = 17, api = 1, modules = {}, revision = 'loader-v20'}
+state = {version = 17, api = 1, modules = {}, revision = 'loader-v21'}
 rawset(_G, 'CowboyBingusModLoader', state)
 
 -- Captured before any mod loads: a mod that replaces one of these globals
@@ -216,7 +216,7 @@ local function write_log()
     pcall(function()
         local file = open_file(LOG_NAME)
         if not file then return end
-        local lines = {'Bingus Shared Loader loader-v20; API 1'}
+        local lines = {'Bingus Shared Loader loader-v21; API 1'}
         for _, line in ipairs(header) do lines[#lines + 1] = line end
         if state.discovery then lines[#lines + 1] = 'Discovery: ' .. state.discovery end
         for _, note in ipairs(copies.notes) do lines[#lines + 1] = '  ' .. note end

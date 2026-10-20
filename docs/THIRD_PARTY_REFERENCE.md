@@ -3,8 +3,8 @@
 For authors of Helldivers 2 mods that run beside the CowboyBingus mods. Every Lua
 mod shares the game's one LuaJIT VM, its globals, its files and its native UI.
 This page lists what the CowboyBingus mods use, so that your mod can stay clear
-of it. It describes the sources released with Bingus Shared Loader v20, for Steam
-build 25480438 (October 2026). Each mod's README documents its own API in full.
+of it. It describes the sources released with Bingus Shared Loader v21, for Steam
+build 25988413 (October 2026). Each mod's README documents its own API in full.
 
 ## Loader contract (API 1)
 
@@ -16,8 +16,8 @@ nothing.
 | Field | Meaning |
 | --- | --- |
 | `api` | `1`. |
-| `version` | `17` in v18 to v20; it does not follow the release number. Never compare it. |
-| `revision` | `'loader-v20'`, for logs and tools. |
+| `version` | `17` in v18 to v21; it does not follow the release number. Never compare it. |
+| `revision` | `'loader-v21'`, for logs and tools. |
 | `capabilities` | Read-only: `api`, `logs`, `discovery`, `jit_budget`, `health`, `after_startup`. Test these, not `version`. v18 and older have no table. |
 | `modules` | Resource name to status: `loaded`, `loading`, `not installed`, `load failed: ...` or `lookup failed: ...`. |
 | `discovery` | `N declared entries` (plus archive warnings) or `failed: ...`. |
@@ -158,7 +158,7 @@ Global switches they read:
 - **Binding pages: Mod Bindings Menu.**
   - It adds a fourth tab, MODS, to both binding pages, and treats any fourth tab
     there as its own. It adds none if the title slot it borrows is taken.
-  - It replaces the whole `content/input.config`, pinned to build 25480438.
+  - It replaces the whole `content/input.config`, pinned to build 25988413.
     Another input.config replacement conflicts with it, and its replacement
     stays deployed even while the mod is inactive.
   - It repurposes 36 dormant developer actions in input groups 9 to 12

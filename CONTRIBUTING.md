@@ -15,7 +15,7 @@ The result is `releases/Bingus-Shared-Loader-v16.zip` under the base workspace, 
 
 ## Development-only frame probe build (never published)
 
-`python -B scripts/build.py --probe` builds `Bingus-Shared-Loader-v20-probe4.zip` into `build-probe/`, never into a releases folder. It embeds `src/frame_probe.lua` and inserts its two hooks into the coordinator at build time (`PROBE_HOOKS` in `scripts/build.py`), so the public build's sources and resource are unchanged. It times every mod's update and render and rotates normal, burn, bypass and without-ECS arms in 10 s blocks (frame probe schema 4) for the real-play study in PerformanceBaseline. Its revision is `loader-v20-probe4`, its loader log's second line names the probe, `runtime_verified` is always false, and `tests/test_package.py` and `scripts/privacy_audit.py` refuse it as a release. Never publish it.
+`python -B scripts/build.py --probe` builds `Bingus-Shared-Loader-v21-probe4.zip` into `build-probe/`, never into a releases folder. It embeds `src/frame_probe.lua` and inserts its two hooks into the coordinator at build time (`PROBE_HOOKS` in `scripts/build.py`), so the public build's sources and resource are unchanged. It times every mod's update and render and rotates normal, burn, bypass and without-ECS arms in 10 s blocks (frame probe schema 4) for the real-play study in PerformanceBaseline. Its revision is `loader-v21-probe4`, its loader log's second line names the probe, `runtime_verified` is always false, and `tests/test_package.py` and `scripts/privacy_audit.py` refuse it as a release. Never publish it.
 
 ## Marking a played build
 
