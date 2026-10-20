@@ -57,4 +57,4 @@ For the two-package megapack installation, pass only the loader ZIP and megapack
 
 After the overlay fixture has been prepared by `test_overlay_compatibility.py`, its Lua harness accepts a fifth argument pointing to the megapack build directory (after the optional vaulting resource). This checks the bundled modules and the pack identity alongside Overlay v2 and HUD+ across 1,024 startup combinations.
 
-Keep the manager GUID, `CowboyBingusModLoader` API marker and existing module resource names stable. Preserve original callbacks, one-time startup, missing-module checks and failure isolation. No repository-wide license has been selected.
+Keep the manager GUID, `CowboyBingusModLoader` API marker and existing module resource names stable. Preserve original callbacks, one-time startup, missing-module checks and failure isolation. This repository is licensed under the BSD Zero Clause License (0BSD); see LICENSE.
